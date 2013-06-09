@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Feeds</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/css/bootstrap.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+        <style>
+            body {
+                padding: 1em;
+            }
+            .bold {
+                font-weight: bold;
+            }
+            .spin {
+                position: fixed;
+                top: 100px;
+                left: 100px;
+                width: 32px;
+                height: 32px;
+                background-image: url('/img/spin.gif');
+            }
+        </style>
+    </head>
+    <body>
+        <div class="spin" data-bind="visible: spin()"></div>
+        <ul class="nav nav-pills">
+            <li data-bind="css: { active: menu() === 'feeds' }">
+                <a href="#feeds">Feeds</a>
+            </li>
+            <li data-bind="css: { active: menu() === 'unread' }">
+                <a href="#unread">Unread</a>
+            </li>
+            <li data-bind="css: { active: menu() === 'important' }">
+                <a href="#important">Important</a>
+            </li>
+        </ul>
+        <div data-bind="template: { foreach: array, name: type() }"></div>
+        <script type="text/html" id="article">
+            <div class="well well-small">
+                <span class="bold" data-bind="text: title"></span><br>
+                Published <span data-bind="text: date"></span>
+                in <a href="#" data-bind="text: feed_title, click: $root.viewArticleFeed"></a></span>
+                <div class="buttons">
+                    <a href="#" class="btn btn-mini"
+                        data-bind="click: $root.read, css: { 'btn-inverse': is_read }">Read</a>
+                    <a href="#" class="btn btn-mini"
+                        data-bind="click: $root.important, css: { 'btn-danger': is_important }">Important</a>
+                </div>
+            </div>
+        </script>
+        <script type="text/html" id="feed">
+            <div class="well well-small">
+                <span class="bold" data-bind="text: title"></span><br>
+                <span data-bind="text: unread"></span> unread,
+                <span data-bind="text: important"></span> important
+                <div class="buttons">
+                    <a href="#" class="btn btn-mini" data-bind="click: $root.viewFeed">View</a>
+                    <a href="#" class="btn btn-mini" data-bind="click: $root.allRead">Mark all read</a>
+                </div>
+            </div>
+        </script>
+        <script src="/js/knockout.js"></script>
+        <script src="/js/knockout.mapping.js"></script>
+        <script src="/js/xhr-json.js"></script>
+        <script src="/js/router.js"></script>
+        <script src="/js/app.js"></script>
+    </body>
+</html>
