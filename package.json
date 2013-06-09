@@ -6,6 +6,7 @@
         "request": "*",
         "sqlite3": "*",
         "express": "*",
-        "node-uuid": "*"
+        "node-uuid": "*",
+	"fast-feed": "*"
     }
 }
