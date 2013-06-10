@@ -33,6 +33,17 @@ var app = {
         XHRJSON.put('/article/' + article.uuid + '/read', {});
     },
 
+    // Marks article read/unread, does not open it.
+    markRead: function(article) {
+        if (article.is_read() === 1) {
+            article.is_read(0);
+            XHRJSON.put('/article/' + article.uuid + '/unread', {});
+        } else {
+            article.is_read(1);
+            XHRJSON.put('/article/' + article.uuid + '/read', {});
+        }
+    },
+
     // Marks all feed articles read.
     allRead: function(feed) {
         XHRJSON.put('/feed/' + feed.uuid + '/read', {});

@@ -1,4 +1,10 @@
 {
     "db": "db.sqlite",
-    "requests": 20
+    "requests": 20,
+    "polltime": 600,
+    "timeout": 10000,
+    "auth": {
+        "user": "test",
+        "pass": "test"
+    }
 }

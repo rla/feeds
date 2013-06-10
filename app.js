@@ -1,11 +1,16 @@
-var async = require('async');
-var fs = require('fs');
-var feed = require('./lib/fetch');
-var importer = require('./lib/importer');
 var log = require('./lib/log')(module);
 var express = require('express');
 var http = require('http');
 var path = require('path');
+var feeds = require('./lib/feeds');
+var config = require('./config.json');
+
+// Polltime check.
+
+var polltime = config.polltime;
+if (polltime < 60) {
+    throw new Error('Poll time must be at least 60 seconds.');
+}
 
 var app = express();
 
@@ -24,5 +29,14 @@ if ('development' == app.get('env')) {
 require('./lib/api')(app);
 
 http.createServer(app).listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
+    log('express server listening on port: %s', app.get('port'));
 });
+
+// Starts automatic updating for feeds.
+
+setInterval(function() {
+    log('updating feeds');
+    feeds.update(function() {
+        log('update finished');
+    });
+}, polltime * 1000);

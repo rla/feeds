@@ -14,10 +14,10 @@
             }
             .spin {
                 position: fixed;
-                top: 100px;
-                left: 100px;
-                width: 32px;
-                height: 32px;
+                top: 50px;
+                left: 1em;
+                width: 220px;
+                height: 19px;
                 background-image: url('/img/spin.gif');
             }
         </style>
@@ -44,6 +44,8 @@
                 <div class="buttons">
                     <a href="#" class="btn btn-mini"
                         data-bind="click: $root.read, css: { 'btn-inverse': is_read }">Read</a>
+                    <a href="#" class="btn btn-mini"
+                        data-bind="click: $root.markRead, css: { 'btn-inverse': is_read }">Mark read</a>
                     <a href="#" class="btn btn-mini"
                         data-bind="click: $root.important, css: { 'btn-danger': is_important }">Important</a>
                 </div>
