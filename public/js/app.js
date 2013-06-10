@@ -3,6 +3,9 @@ var app = {
     // Offset in current view.
     start: 0,
 
+    // Size of load batch.
+    batch: 15,
+
     // Current view type (article or feed).
     type: ko.observable('article'),
 
@@ -65,7 +68,7 @@ var app = {
     // What to load, depends on app.what.
     loadArticles: function() {
         var self = this;
-        var url = '/' + self.what + '/' + self.start + '/30';
+        var url = '/' + self.what + '/' + self.start + '/' + self.batch;
         XHRJSON.get(url, function(err, articles) {
             if (err) { return; }
             var mapping = {
@@ -85,7 +88,7 @@ var app = {
     // Loads batch of feeds.
     loadFeeds: function() {
         var self = this;
-        var url = '/feeds/' + self.start + '/30';
+        var url = '/feeds/' + self.start + '/' + self.batch;
         XHRJSON.get(url, function(err, feeds) {
             if (err) { return; }
             var mapping = {

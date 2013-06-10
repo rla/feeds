@@ -31,3 +31,8 @@ SELECT
     article.*,
     feed.title AS feed_title
 FROM article LEFT JOIN feed ON (article.feed = feed.uuid);
+
+-- CREATE INDEX article_uuid_index ON article (uuid);
+-- CREATE INDEX article_published_index ON article (published);
+-- CREATE INDEX article_is_read_index ON article (is_read);
+-- CREATE INDEX article_is_important_index ON article (is_important);
