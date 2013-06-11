@@ -24,12 +24,23 @@ var app = {
         this.load();
     },
 
+    // User authenticated or not.
+    authed: ko.observable(false),
+
+    // Currently entered username.
+    user: ko.observable(),
+
+    // Currently entered password.
+    pass: ko.observable(),
+
     // Shows/hides loading spinner.
     spin: ko.observable(false),
 
     // Marks article read.
     // Opens in new tab/window.
+    // Only does something when authenticated.
     read: function(article) {
+        if (!app.authed()) { return; }
         var win = window.open(article.link, '_blank');
         win.focus();
         article.is_read(1);
@@ -37,7 +48,9 @@ var app = {
     },
 
     // Marks article read/unread, does not open it.
+    // Only does something when authenticated.
     markRead: function(article) {
+        if (!app.authed()) { return; }
         if (article.is_read() === 1) {
             article.is_read(0);
             XHRJSON.put('/article/' + article.uuid + '/unread', {});
@@ -48,13 +61,17 @@ var app = {
     },
 
     // Marks all feed articles read.
+    // Only does something when authenticated.
     allRead: function(feed) {
+        if (!app.authed()) { return; }
         XHRJSON.put('/feed/' + feed.uuid + '/read', {});
         feed.unread(0);
     },
 
     // Marks article important/unimportant.
+    // Only does something when authenticated.
     important: function(article) {
+        if (!app.authed()) { return; }
         if (article.is_important() === 1) {
             article.is_important(0);
             XHRJSON.put('/article/' + article.uuid + '/unimportant', {});
@@ -119,6 +136,34 @@ var app = {
     // Link from article.
     viewArticleFeed: function(article) {
         route.go('feed/' + article.feed);
+    },
+
+    // Authenticates the user with
+    // the currently entered username and password.
+    // XXX we have to read values directly
+    // as they might have been autofilled which
+    // does not trigger change events.
+    login: function(form) {
+        var self = this;
+        var inputs = form.elements;
+        XHRJSON.post('/login', {
+            user: inputs.user.value,
+            pass: inputs.pass.value
+        }, function(err, data) {
+            if (!err && data.ok) {
+                self.authed(true);
+            }
+        });
+    },
+
+    // Deauthenticates the user.
+    logout: function() {
+        var self = this;
+        XHRJSON.post('/logout', {}, function(err, data) {
+            if (!err) {
+                self.authed(false);
+            }
+        });
     }
 };
 

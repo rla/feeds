@@ -34,7 +34,17 @@
             <li data-bind="css: { active: menu() === 'important' }">
                 <a href="#important">Important</a>
             </li>
+            <li data-bind="visible: authed">
+                <a href="#" data-bind="click: logout">Logout</a>
+            </li>
         </ul>
+        <form class="form-inline" data-bind="visible: !authed(), submit: login">
+            <input type="text" name="user" placeholder="user"
+                class="input-small" data-bind="value: user">
+            <input type="password" name="pass" placeholder="pass"
+                class="input-small" data-bind="value: pass">
+            <button type="submit" class="btn">Login</button>
+        </form>
         <div data-bind="template: { foreach: array, name: type() }"></div>
         <script type="text/html" id="article">
             <div class="well well-small">
@@ -43,11 +53,11 @@
                 in <a href="#" data-bind="text: feed_title, click: $root.viewArticleFeed"></a></span>
                 <div class="buttons">
                     <a href="#" class="btn btn-mini"
-                        data-bind="click: $root.read, css: { 'btn-inverse': is_read }">Read</a>
+                        data-bind="click: $root.read, css: { 'btn-inverse': is_read, 'disabled': !$root.authed() }">Read</a>
                     <a href="#" class="btn btn-mini"
-                        data-bind="click: $root.markRead, css: { 'btn-inverse': is_read }">Mark read</a>
+                        data-bind="click: $root.markRead, css: { 'btn-inverse': is_read, 'disabled': !$root.authed() }">Mark read</a>
                     <a href="#" class="btn btn-mini"
-                        data-bind="click: $root.important, css: { 'btn-danger': is_important }">Important</a>
+                        data-bind="click: $root.important, css: { 'btn-danger': is_important, 'disabled': !$root.authed() }">Important</a>
                 </div>
             </div>
         </script>
@@ -58,7 +68,7 @@
                 <span data-bind="text: important"></span> important
                 <div class="buttons">
                     <a href="#" class="btn btn-mini" data-bind="click: $root.viewFeed">View</a>
-                    <a href="#" class="btn btn-mini" data-bind="click: $root.allRead">Mark all read</a>
+                    <a href="#" class="btn btn-mini" data-bind="click: $root.allRead, css: { 'disabled': !$root.authed() }">Mark all read</a>
                 </div>
             </div>
         </script>

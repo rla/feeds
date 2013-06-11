@@ -12,6 +12,8 @@ if (polltime < 60) {
     throw new Error('Poll time must be at least 60 seconds.');
 }
 
+// Set up the express app.
+
 var app = express();
 
 app.set('port', process.env.PORT || 3330);

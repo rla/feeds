@@ -2,6 +2,8 @@ CREATE TABLE feed (
     url VARCHAR(255) NOT NULL,
     title VARCHAR(255),
     uuid CHARACTER(36) NOT NULL,
+    unread INTEGER NOT NULL DEFAULT 0,
+    important INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY(uuid) ON CONFLICT REPLACE,
     UNIQUE(url) ON CONFLICT IGNORE
 );
@@ -36,3 +38,5 @@ FROM article LEFT JOIN feed ON (article.feed = feed.uuid);
 -- CREATE INDEX article_published_index ON article (published);
 -- CREATE INDEX article_is_read_index ON article (is_read);
 -- CREATE INDEX article_is_important_index ON article (is_important);
+
+CREATE INDEX article_feed_is_read_index ON article(feed, is_read);
