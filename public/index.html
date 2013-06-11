@@ -38,7 +38,8 @@
                 <a href="#" data-bind="click: logout">Logout</a>
             </li>
         </ul>
-        <form class="form-inline" data-bind="visible: !authed(), submit: login">
+        <form class="form-inline" style="display: none"
+            data-bind="visible: !authed(), submit: login">
             <input type="text" name="user" placeholder="user"
                 class="input-small" data-bind="value: user">
             <input type="password" name="pass" placeholder="pass"
@@ -49,8 +50,8 @@
         <script type="text/html" id="article">
             <div class="well well-small">
                 <span class="bold" data-bind="text: title"></span><br>
-                Published <span data-bind="text: date"></span>
-                in <a href="#" data-bind="text: feed_title, click: $root.viewArticleFeed"></a></span>
+                Published <span data-bind="text: date"></span> in
+                <a href="#" data-bind="text: feed_title, click: $root.viewArticleFeed"></a></span>
                 <div class="buttons">
                     <a href="#" class="btn btn-mini"
                         data-bind="click: $root.read, css: { 'btn-inverse': is_read, 'disabled': !$root.authed() }">Read</a>
@@ -67,8 +68,10 @@
                 <span data-bind="text: unread"></span> unread,
                 <span data-bind="text: important"></span> important
                 <div class="buttons">
-                    <a href="#" class="btn btn-mini" data-bind="click: $root.viewFeed">View</a>
-                    <a href="#" class="btn btn-mini" data-bind="click: $root.allRead, css: { 'disabled': !$root.authed() }">Mark all read</a>
+                    <a href="#" class="btn btn-mini"
+                        data-bind="click: $root.viewFeed">View</a>
+                    <a href="#" class="btn btn-mini"
+                        data-bind="click: $root.allRead, css: { 'disabled': !$root.authed() }">Mark all read</a>
                 </div>
             </div>
         </script>
