@@ -35,11 +35,10 @@
                 <a href="#important">Important</a>
             </li>
             <li data-bind="visible: authed()">
-                <a href="#" data-bind="click: logout">Logout</a>
+                <a href="#" style="display: none" data-bind="click: logout">Logout</a>
             </li>
         </ul>
-        <form class="form-inline" style="display: none"
-            data-bind="visible: !authed(), submit: login">
+        <form class="form-inline" data-bind="visible: !authed(), submit: login">
             <input type="text" name="user" placeholder="user"
                 class="input-small" data-bind="value: user">
             <input type="password" name="pass" placeholder="pass"
