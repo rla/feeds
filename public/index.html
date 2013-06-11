@@ -34,7 +34,7 @@
             <li data-bind="css: { active: menu() === 'important' }">
                 <a href="#important">Important</a>
             </li>
-            <li data-bind="visible: authed">
+            <li data-bind="visible: authed()">
                 <a href="#" data-bind="click: logout">Logout</a>
             </li>
         </ul>

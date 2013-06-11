@@ -3,9 +3,15 @@
     "requests": 20,
     "polltime": 600,
     "timeout": 10000,
-    "auth": {
-        "user": "test",
-        "pass": "test"
-    },
+    "auth": [
+        {
+            "user": "test",
+            "pass": "test"
+        },
+        {
+            "user": "test1",
+            "pass": "test1"
+        }
+    ],
     "sessionSecret": "secret"
 }
