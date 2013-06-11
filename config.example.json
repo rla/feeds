@@ -6,5 +6,6 @@
     "auth": {
         "user": "test",
         "pass": "test"
-    }
+    },
+    "sessionSecret": "secret"
 }
