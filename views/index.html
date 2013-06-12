@@ -38,10 +38,18 @@
             <li data-bind="css: { active: menu() === 'important' }">
                 <a href="#important">Important</a>
             </li>
+            <li data-bind="css: { active: menu() === 'search' }">
+                <a href="#search">Search</a>
+            </li>
             <li style="display: none" data-bind="visible: authed()">
                 <a href="#" data-bind="click: logout">Logout</a>
             </li>
         </ul>
+        <form class="form-inline" data-bind="visible: menu() === 'search', submit: search">
+            <input type="text" name="query"
+                placeholder="search term" data-bind="value: query">
+            <button type="submit" class="btn">Search</button>
+        </form>
         <form class="form-inline" data-bind="visible: !authed(), submit: login">
             <input type="text" name="user" placeholder="user"
                 class="input-small" data-bind="value: user">

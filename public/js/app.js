@@ -36,6 +36,9 @@ var app = {
     // Shows/hides loading spinner.
     spin: ko.observable(false),
 
+    // Currently entered search query.
+    query: ko.observable(''),
+
     // Marks article read.
     // Opens in new tab/window.
     // Only does something when authenticated.
@@ -117,18 +120,40 @@ var app = {
         var url = '/' + self.what + '/' + self.start + '/' + self.batch;
         XHRJSON.get(url, function(err, result) {
             if (err || result.error) { return; }
-            var mapping = {
-                observe: [ 'is_read', 'is_important', 'is_seen' ]
-            };
-            result.data.forEach(function(article) {
-                var date = new Date(article.published * 1000);
-                article.date = date.toISOString().substring(0, 10);
-                article.title = article.title || '';
-                article.title = article.title.replace(/<[^>]+>/g, '');
-                self.array.push(ko.mapping.fromJS(article, mapping));
-            });
-            self.start += 30;
+            self.appendRawArticles(result.data);
         });
+    },
+
+    // Loads batch of search results.
+    loadSearch: function() {
+        var self = this;
+        var query = encodeURIComponent(self.query());
+        var url = '/search/' + query + '/' + self.start + '/' + self.batch;
+        XHRJSON.get(url, function(err, result) {
+            if (err || result.error) { return; }
+            self.appendRawArticles(result.data);
+        });
+    },
+
+    // Appends raw articles to the view.
+    appendRawArticles: function(articles) {
+        var self = this;
+        var mapping = {
+            observe: [ 'is_read', 'is_important', 'is_seen' ]
+        };
+        articles.forEach(function(article) {
+            var date = new Date(article.published * 1000);
+            article.date = date.toISOString().substring(0, 10);
+            article.title = article.title || '';
+            article.title = article.title.replace(/<[^>]+>/g, '');
+            self.array.push(ko.mapping.fromJS(article, mapping));
+        });
+        self.start += articles.length;
+    },
+
+    // Runs search.
+    search: function(form) {
+        route.go('search', encodeURIComponent(form.elements.query.value));
     },
 
     // Loads batch of feeds.
@@ -150,9 +175,14 @@ var app = {
     // Resets current collection.
     // Loads first batch.
     reload: function() {
+        this.reset();
+        this.load();
+    },
+
+    // Cleans the current view.
+    reset: function() {
         this.array.removeAll();
         this.start = 0;
-        this.load();
     },
 
     // Helper to display given feed articles.
@@ -268,6 +298,22 @@ route(/^feed\/([A-Za-z0-9\-]+)/, function(uuid) {
     app.what = 'feed/' + uuid;
     app.menu('feeds');
     app.load = app.loadArticles;
+    app.reload();
+});
+
+route(/^search$/, function() {
+    app.type('article');
+    app.menu('search');
+    app.query('');
+    app.load = app.loadSearch;
+    app.reset();
+});
+
+route(/^search\/(.+)/, function(query) {
+    app.type('article');
+    app.menu('search');
+    app.load = app.loadSearch;
+    app.query(decodeURIComponent(query));
     app.reload();
 });
 
