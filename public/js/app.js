@@ -56,8 +56,10 @@ var app = {
         var uuids = [];
         for (var i = 0; i < arr.length; i++) {
             var top = arr[i];
-            top.is_seen(1);
-            uuids.push(top.uuid);
+            if (top.is_seen() === 0) {
+                top.is_seen(1);
+                uuids.push(top.uuid);
+            }
             if (article === top) {
                 break;
             }
