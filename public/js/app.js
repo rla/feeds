@@ -43,12 +43,13 @@ var app = {
     // Opens in new tab/window.
     // Only does something when authenticated.
     read: function(article) {
-        if (!app.authed()) { return; }
+        if (app.authed()) {
+            article.is_read(1);
+            article.is_seen(1);
+            XHRJSON.put('/article/' + article.uuid + '/read', {});
+        }
         var win = window.open(article.link, '_blank');
         win.focus();
-        article.is_read(1);
-        article.is_seen(1);
-        XHRJSON.put('/article/' + article.uuid + '/read', {});
     },
 
     // Marks all current articles from
