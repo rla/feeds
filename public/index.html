@@ -28,14 +28,14 @@
             <li data-bind="css: { active: menu() === 'feeds' }">
                 <a href="#feeds">Feeds</a>
             </li>
-            <li data-bind="css: { active: menu() === 'unread' }">
-                <a href="#unread">Unread</a>
+            <li data-bind="css: { active: menu() === 'unseen' }">
+                <a href="#unseen">Unseen</a>
             </li>
             <li data-bind="css: { active: menu() === 'important' }">
                 <a href="#important">Important</a>
             </li>
-            <li data-bind="visible: authed()">
-                <a href="#" style="display: none" data-bind="click: logout">Logout</a>
+            <li style="display: none" data-bind="visible: authed()">
+                <a href="#" data-bind="click: logout">Logout</a>
             </li>
         </ul>
         <form class="form-inline" data-bind="visible: !authed(), submit: login">
@@ -57,6 +57,8 @@
                     <a href="#" class="btn btn-mini"
                         data-bind="click: $root.markRead, css: { 'btn-inverse': is_read, 'disabled': !$root.authed() }">Mark read</a>
                     <a href="#" class="btn btn-mini"
+                        data-bind="click: $root.seenTop, css: { 'btn-inverse': is_seen, 'disabled': !$root.authed() }">Seen</a>
+                    <a href="#" class="btn btn-mini"
                         data-bind="click: $root.important, css: { 'btn-danger': is_important, 'disabled': !$root.authed() }">Important</a>
                 </div>
             </div>
@@ -70,7 +72,9 @@
                     <a href="#" class="btn btn-mini"
                         data-bind="click: $root.viewFeed">View</a>
                     <a href="#" class="btn btn-mini"
-                        data-bind="click: $root.allRead, css: { 'disabled': !$root.authed() }">Mark all read</a>
+                        data-bind="click: $root.allSeen, css: { 'disabled': !$root.authed() }">All seen</a>
+                    <a href="#" class="btn btn-mini"
+                        data-bind="click: $root.allRead, css: { 'disabled': !$root.authed() }">All read</a>
                 </div>
             </div>
         </script>

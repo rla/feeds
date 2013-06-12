@@ -44,7 +44,25 @@ var app = {
         var win = window.open(article.link, '_blank');
         win.focus();
         article.is_read(1);
+        article.is_seen(1);
         XHRJSON.put('/article/' + article.uuid + '/read', {});
+    },
+
+    // Marks all current articles from
+    // top, down to the given article, as seen.
+    seenTop: function(article) {
+        if (!app.authed()) { return; }
+        var arr = app.array();
+        var uuids = [];
+        for (var i = 0; i < arr.length; i++) {
+            var top = arr[i];
+            top.is_seen(1);
+            uuids.push(top.uuid);
+            if (article === top) {
+                break;
+            }
+        }
+        XHRJSON.put('/seen', uuids);
     },
 
     // Marks article read/unread, does not open it.
@@ -56,6 +74,7 @@ var app = {
             XHRJSON.put('/article/' + article.uuid + '/unread', {});
         } else {
             article.is_read(1);
+            article.is_seen(1);
             XHRJSON.put('/article/' + article.uuid + '/read', {});
         }
     },
@@ -66,6 +85,14 @@ var app = {
         if (!app.authed()) { return; }
         XHRJSON.put('/feed/' + feed.uuid + '/read', {});
         feed.unread(0);
+    },
+
+    // Marks all feed articles seen.
+    // Only does something when authenticated.
+    allSeen: function(feed) {
+        if (!app.authed()) { return; }
+        XHRJSON.put('/feed/' + feed.uuid + '/seen', {});
+        feed.unseen(0);
     },
 
     // Marks article important/unimportant.
@@ -86,12 +113,12 @@ var app = {
     loadArticles: function() {
         var self = this;
         var url = '/' + self.what + '/' + self.start + '/' + self.batch;
-        XHRJSON.get(url, function(err, articles) {
-            if (err) { return; }
+        XHRJSON.get(url, function(err, result) {
+            if (err || result.error) { return; }
             var mapping = {
-                observe: [ 'is_read', 'is_important' ]
+                observe: [ 'is_read', 'is_important', 'is_seen' ]
             };
-            articles.forEach(function(article) {
+            result.data.forEach(function(article) {
                 var date = new Date(article.published * 1000);
                 article.date = date.toISOString().substring(0, 10);
                 article.title = article.title || '';
@@ -106,12 +133,12 @@ var app = {
     loadFeeds: function() {
         var self = this;
         var url = '/feeds/' + self.start + '/' + self.batch;
-        XHRJSON.get(url, function(err, feeds) {
-            if (err) { return; }
+        XHRJSON.get(url, function(err, result) {
+            if (err || result.error) { return; }
             var mapping = {
                 observe: [ 'unread' ]
             };
-            feeds.forEach(function(feed) {
+            result.data.forEach(function(feed) {
                 self.array.push(ko.mapping.fromJS(feed, mapping));
             });
             self.start += 30;
@@ -149,8 +176,8 @@ var app = {
         XHRJSON.post('/login', {
             user: inputs.user.value,
             pass: inputs.pass.value
-        }, function(err, data) {
-            if (!err && data.ok) {
+        }, function(err, result) {
+            if (!err && !result.error && result.data.ok) {
                 self.authed(true);
             }
         });
@@ -159,8 +186,9 @@ var app = {
     // Deauthenticates the user.
     logout: function() {
         var self = this;
-        XHRJSON.post('/logout', {}, function(err, data) {
-            if (!err) {
+        XHRJSON.post('/logout', {}, function(err, result) {
+            console.log(result);
+            if (!err && !result.error) {
                 self.authed(false);
             }
         });
@@ -214,6 +242,14 @@ route(/^unread/, function() {
     app.type('article');
     app.what = 'unread';
     app.menu('unread');
+    app.load = app.loadArticles;
+    app.reload();
+});
+
+route(/^unseen/, function() {
+    app.type('article');
+    app.what = 'unseen';
+    app.menu('unseen');
     app.load = app.loadArticles;
     app.reload();
 });

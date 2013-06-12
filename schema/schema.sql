@@ -17,6 +17,7 @@ CREATE TABLE article (
     published INTEGER NOT NULL,
     is_read INTEGER NOT NULL DEFAULT 0,
     is_important INTEGER NOT NULL DEFAULT 0,
+    is_seen INTEGER NOT NULL DEFAULT 0,
     fetch_time INTEGER NOT NULL,
     PRIMARY KEY(feed, id) ON CONFLICT IGNORE
 );
@@ -25,7 +26,8 @@ CREATE VIEW feed_with_stat AS
 SELECT
     feed.*,
     (SELECT COUNT(*) FROM article WHERE article.feed = feed.uuid AND is_read = 0) AS unread,
-    (SELECT COUNT(*) FROM article WHERE article.feed = feed.uuid AND is_important = 1) AS important
+    (SELECT COUNT(*) FROM article WHERE article.feed = feed.uuid AND is_important = 1) AS important,
+    (SELECT COUNT(*) FROM article WHERE article.feed = feed.uuid AND is_seen = 0) AS unseen
 FROM feed;
 
 CREATE VIEW article_with_feed AS
@@ -40,3 +42,4 @@ FROM article LEFT JOIN feed ON (article.feed = feed.uuid);
 -- CREATE INDEX article_is_important_index ON article (is_important);
 
 CREATE INDEX article_feed_is_read_index ON article(feed, is_read);
+CREATE INDEX article_feed_is_seen_index ON article(feed, is_seen);
