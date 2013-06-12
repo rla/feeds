@@ -20,6 +20,9 @@
                 height: 19px;
                 background-image: url('/img/spin.gif');
             }
+            .buttons {
+                margin-top: 0.5em;
+            }
         </style>
     </head>
     <body>
@@ -52,14 +55,14 @@
                 Published <span data-bind="text: date"></span> in
                 <a href="#" data-bind="text: feed_title, click: $root.viewArticleFeed"></a></span>
                 <div class="buttons">
-                    <a href="#" class="btn btn-mini"
-                        data-bind="click: $root.read, css: { 'btn-inverse': is_read, 'disabled': !$root.authed() }">Read</a>
-                    <a href="#" class="btn btn-mini"
+                    <a href="#" class="btn btn-small"
                         data-bind="click: $root.markRead, css: { 'btn-inverse': is_read, 'disabled': !$root.authed() }">Mark read</a>
-                    <a href="#" class="btn btn-mini"
-                        data-bind="click: $root.seenTop, css: { 'btn-inverse': is_seen, 'disabled': !$root.authed() }">Seen</a>
-                    <a href="#" class="btn btn-mini"
+                    <a href="#" class="btn btn-small"
                         data-bind="click: $root.important, css: { 'btn-danger': is_important, 'disabled': !$root.authed() }">Important</a>
+                    <a href="#" class="btn btn-small"
+                        data-bind="click: $root.seenTop, css: { 'btn-inverse': is_seen, 'disabled': !$root.authed() }">Seen</a>
+                    <a href="#" class="btn btn-small"
+                        data-bind="click: $root.read, css: { 'btn-inverse': is_read, 'disabled': !$root.authed() }">Read</a>
                 </div>
             </div>
         </script>
@@ -70,12 +73,12 @@
                 <span data-bind="text: unseen"></span> unseen,
                 <span data-bind="text: important"></span> important
                 <div class="buttons">
-                    <a href="#" class="btn btn-mini"
-                        data-bind="click: $root.viewFeed">View</a>
-                    <a href="#" class="btn btn-mini"
+                    <a href="#" class="btn btn-small"
                         data-bind="click: $root.allSeen, css: { 'disabled': !$root.authed() }">All seen</a>
-                    <a href="#" class="btn btn-mini"
+                    <a href="#" class="btn btn-small"
                         data-bind="click: $root.allRead, css: { 'disabled': !$root.authed() }">All read</a>
+                    <a href="#" class="btn btn-small"
+                        data-bind="click: $root.viewFeed">View</a>
                 </div>
             </div>
         </script>
