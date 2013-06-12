@@ -164,7 +164,7 @@ var app = {
         XHRJSON.get(url, function(err, result) {
             if (err || result.error) { return; }
             var mapping = {
-                observe: [ 'unread' ]
+                observe: [ 'unread', 'unseen' ]
             };
             result.data.forEach(function(feed) {
                 self.array.push(ko.mapping.fromJS(feed, mapping));
@@ -220,7 +220,6 @@ var app = {
     logout: function() {
         var self = this;
         XHRJSON.post('/logout', {}, function(err, result) {
-            console.log(result);
             if (!err && !result.error) {
                 self.authed(false);
             }
