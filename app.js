@@ -4,6 +4,7 @@ var http = require('http');
 var path = require('path');
 var feeds = require('./lib/feeds');
 var config = require('./config.json');
+var ejs = require('ejs');
 
 // Polltime check.
 
@@ -17,6 +18,16 @@ if (polltime < 60) {
 var app = express();
 
 app.set('port', process.env.PORT || 3330);
+
+// Set up views.
+// Will use ejs with .html file name extension.
+
+ejs.open = '{{';
+ejs.close = '}}';
+
+app.set('views', __dirname + '/views');
+app.engine('html', ejs.renderFile);
+
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -30,7 +41,13 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+// Set up routes.
+
 require('./lib/api')(app);
+
+app.get('/', function(req, res) {
+    res.render('index.html', { loggedIn: !!req.session.ok });
+});
 
 http.createServer(app).listen(app.get('port'), function(){
     log('express server listening on port: %s', app.get('port'));

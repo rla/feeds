@@ -273,6 +273,8 @@ route(/.*/, function() {
     route.go('feeds');
 });
 
+app.authed(window.loggedIn);
+
 // Infinite scroll.
 // Not cross-browser.
 // Tested in FF 16, Chrome 2x?, Android 4.x.
