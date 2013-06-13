@@ -1,3 +1,32 @@
+// Infinite scroll.
+// Not cross-browser.
+// Tested in FF 16, Chrome 2x?, Android 4.x.
+// Throttles event in 5s.
+
+var scroll = (function() {
+    var throttle = false;
+    var lastOffset = 0; // used for detecting direction.
+    document.addEventListener('scroll', function(event) {
+        var offset = window.pageYOffset;
+        var total = document.body.scrollHeight;
+        var win = window.innerHeight;
+        var toBotton = offset > lastOffset;
+        lastOffset = offset;
+        var atBottom = offset > (total - win - 100);
+        if (toBotton && atBottom && !throttle) {
+            console.log('infinite scroll toggled load');
+            throttle = true;
+            app.more();
+            setTimeout(function() {
+                throttle = false;
+            }, 5000);
+        }
+    }, false);
+    return {};
+})();
+
+// The main app object.
+
 var app = {
 
     // Offset in current view.
@@ -318,22 +347,7 @@ route(/^search\/(.+)/, function(query) {
 });
 
 route(/.*/, function() {
-    route.go('feeds');
+    route.go('unseen');
 });
 
 app.authed(window.loggedIn);
-
-// Infinite scroll.
-// Not cross-browser.
-// Tested in FF 16, Chrome 2x?, Android 4.x.
-
-var last = 0;
-document.addEventListener('scroll', function(event) {
-    var offset = window.pageYOffset;
-    var total = document.body.scrollHeight;
-    var win = window.innerHeight;
-    if (offset > (total - win - 100) && total !== last) {
-        last = total;
-        app.more();
-    }
-}, false);
