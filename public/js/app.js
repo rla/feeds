@@ -1,7 +1,6 @@
 // Infinite scroll.
 // Not cross-browser.
 // Tested in FF 16, Chrome 2x?, Android 4.x.
-// Throttles event in 5s.
 
 var scroll = (function() {
     var throttle = false;
@@ -19,7 +18,7 @@ var scroll = (function() {
             app.more();
             setTimeout(function() {
                 throttle = false;
-            }, 5000);
+            }, 3000);
         }
     }, false);
     return {};
