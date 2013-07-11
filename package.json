@@ -1,13 +1,13 @@
 {
     "name": "rla-feeds",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "dependencies": {
         "async": "*",
         "request": "*",
         "sqlite3": "*",
         "express": "*",
         "node-uuid": "*",
-        "fast-feed": "*",
+        "fast-feed": "0.0.4",
         "ejs": "*"
     }
 }
