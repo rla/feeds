@@ -213,9 +213,55 @@ var app = {
         });
     },
 
+    // Loads batch of invalid feeds.
+
+    loadInvalid: function() {
+
+        var self = this;
+        var url = '/invalid/' + self.start + '/' + self.batch;
+
+        XHRJSON.get(url, function(err, result) {
+
+            if (err || result.error) { return; }
+
+            result.data.forEach(function(feed) {
+
+                self.array.push(feed);
+            });
+
+            self.start += 30;
+        });
+    },
+
+    // Helper to delete given feed.
+
+    deleteFeed: function(feed) {
+
+        if (!app.authed()) { return; }
+
+        XHRJSON.del('/feed/' + feed.uuid, function() {
+
+            app.reload();
+        });
+    },
+
+    // Marks feed error resolved.
+
+    resolveFeed: function(feed) {
+
+        if (!app.authed()) { return; }
+
+        XHRJSON.put('/feed/' + feed.uuid + '/resolve', {}, function() {
+
+            app.reload();
+        });
+    },
+
     // Resets current collection.
     // Loads first batch.
+
     reload: function() {
+
         this.reset();
         this.load();
     },
@@ -330,6 +376,13 @@ route(/^feeds/, function() {
     app.type('feed');
     app.menu('feeds');
     app.load = app.loadFeeds;
+    app.reload();
+});
+
+route(/^invalid/, function() {
+    app.type('invalid');
+    app.menu('invalid');
+    app.load = app.loadInvalid;
     app.reload();
 });
 

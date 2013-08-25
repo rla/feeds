@@ -41,6 +41,9 @@
             <li data-bind="css: { active: menu() === 'search' }">
                 <a href="#search">Search</a>
             </li>
+            <li data-bind="css: { active: menu() === 'invalid' }">
+                <a href="#invalid">Invalid</a>
+            </li>
             <li style="display: none"
                 data-bind="visible: authed()">
                 <a href="#" data-bind="click: logout">Logout</a>
@@ -91,6 +94,20 @@
                         data-bind="click: $root.allSeen, css: { 'disabled': !$root.authed() }">All seen</a>
                     <a href="#" class="btn btn-small"
                         data-bind="click: $root.allRead, css: { 'disabled': !$root.authed() }">All read</a>
+                    <a href="#" class="btn btn-small"
+                        data-bind="click: $root.viewFeed">View</a>
+                </div>
+            </div>
+        </script>
+        <script type="text/html" id="invalid">
+            <div class="well well-small">
+                <span class="bold" data-bind="text: title"></span><br>
+                Error: <span data-bind="text: error"></span>
+                <div class="buttons">
+                    <a href="#" class="btn btn-small"
+                        data-bind="click: $root.deleteFeed, css: { 'disabled': !$root.authed() }">Delete</a>
+                    <a href="#" class="btn btn-small"
+                        data-bind="click: $root.resolveFeed, css: { 'disabled': !$root.authed() }">Resolve</a>
                     <a href="#" class="btn btn-small"
                         data-bind="click: $root.viewFeed">View</a>
                 </div>
