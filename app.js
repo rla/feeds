@@ -44,6 +44,7 @@ if ('development' == app.get('env')) {
 // Set up routes.
 
 require('./lib/api')(app);
+require('./lib/export')(app);
 
 app.get('/', function(req, res) {
     res.render('index.html', { loggedIn: !!req.session.ok });
