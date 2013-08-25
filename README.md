@@ -18,6 +18,23 @@ and XHR handling. SQLite is used as database on the server side.
 My live app is running at [http://feeds.rlaanemets.com/](http://feeds.rlaanemets.com/).
 Warning: it might not work with old browsers. IE8 is certanly old by my definition :).
 
+## Installing
+
+First install dependencies using `npm install`.
+
+Then create database using `make db.sqlite`.
+
+## Importing feed addresses
+
+Log into the app and obtain the auth token from `/token`.
+
+Then do a POST request to `/import` with a list of URLs. Example with curl:
+
+    curl -X POST --data-binary @list.txt http://localhost:3330/import?auth=ctmzgmjaxbasklhntwvh --header 'Content-Type: text/plain'
+
+Where `list.txt` is the file containing URLs and `ctmzgmjaxbasklhntwvh` is your auth token obtained in
+the previous step.
+
 ## License
 
 The MIT License.

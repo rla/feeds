@@ -44,6 +44,7 @@ if ('development' == app.get('env')) {
 // Set up routes.
 
 require('./lib/api')(app);
+require('./lib/import')(app);
 require('./lib/export')(app);
 
 app.get('/', function(req, res) {
