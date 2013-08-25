@@ -5,11 +5,19 @@ var path = require('path');
 var feeds = require('./lib/feeds');
 var config = require('./config.json');
 var ejs = require('ejs');
+var commander = require('commander');
+var package = require('./package.json');
+
+commander.version(package.version);
+commander.option('-f, --fetch', 'Runs fetch process right at start.');
+commander.parse(process.argv);
 
 // Polltime check.
 
 var polltime = config.polltime;
+
 if (polltime < 60) {
+
     throw new Error('Poll time must be at least 60 seconds.');
 }
 
@@ -38,6 +46,7 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 if ('development' == app.get('env')) {
+
     app.use(express.errorHandler());
 }
 
@@ -48,18 +57,35 @@ require('./lib/import')(app);
 require('./lib/export')(app);
 
 app.get('/', function(req, res) {
+
     res.render('index.html', { loggedIn: !!req.session.ok });
 });
 
-http.createServer(app).listen(app.get('port'), function(){
+http.createServer(app).listen(app.get('port'), function() {
+
     log('express server listening on port: %s', app.get('port'));
 });
 
-// Starts automatic updating for feeds.
+if (commander.fetch) {
 
-setInterval(function() {
-    log('updating feeds');
     feeds.update(function() {
+
+        log('Done');
+    });
+
+} else {
+
+    // Starts automatic updating for feeds.
+
+    setInterval(function() {
+
+        log('updating feeds');
+
+    feeds.update(function() {
+
         log('update finished');
     });
-}, polltime * 1000);
+
+    }, polltime * 1000);
+}
+
