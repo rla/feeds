@@ -13,5 +13,6 @@
             "pass": "test1"
         }
     ],
-    "sessionSecret": "secret"
+    "sessionSecret": "secret",
+    "heapdump": false
 }
