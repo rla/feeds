@@ -1,4 +1,4 @@
-var log = require('./lib/log')(module);
+var debug = require('debug')('app');
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -7,6 +7,19 @@ var config = require('./config.json');
 var ejs = require('ejs');
 var commander = require('commander');
 var package = require('./package.json');
+var db = require('./lib/db/db');
+
+// When heap profiling is enables, load v8-profiler.
+// https://github.com/felixge/node-memory-leak-tutorial
+
+if (config.heapdump) {
+
+    require('heapdump');
+
+    console.log('PID: ' + process.pid);
+}
+
+db.open(config.db);
 
 commander.version(package.version);
 commander.option('-f, --fetch', 'Runs fetch process right at start.');
@@ -36,8 +49,6 @@ ejs.close = '}}';
 app.set('views', __dirname + '/views');
 app.engine('html', ejs.renderFile);
 
-app.use(express.favicon());
-app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.cookieSession({ secret: config.sessionSecret }));
@@ -63,14 +74,14 @@ app.get('/', function(req, res) {
 
 http.createServer(app).listen(app.get('port'), function() {
 
-    log('express server listening on port: %s', app.get('port'));
+    debug('Express server listening on port: %s', app.get('port'));
 });
 
 if (commander.fetch) {
 
     feeds.update(function() {
 
-        log('Done');
+        debug('Done');
     });
 
 } else {
@@ -79,12 +90,12 @@ if (commander.fetch) {
 
     setInterval(function() {
 
-        log('updating feeds');
+        debug('Updating feeds');
 
-    feeds.update(function() {
+        feeds.update(function() {
 
-        log('update finished');
-    });
+            debug('Update finished');
+        });
 
     }, polltime * 1000);
 }

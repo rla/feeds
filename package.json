@@ -9,6 +9,11 @@
         "node-uuid": "*",
         "fast-feed": "0.0.5",
         "ejs": "*",
-        "commander": "*"
+        "commander": "*",
+        "debug": "*",
+        "split": "*"
+    },
+    "devDependencies": {
+        "heapdump": "*"
     }
 }
