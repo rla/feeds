@@ -43,6 +43,10 @@ To start fetching of feeds immediately, start the app with `-f` switch:
 
     node app.js -f
 
+## Misc
+
+App's favicon is from [favicon.cc](http://www.favicon.cc/?action=icon&file_id=360427), made by Jason.
+
 ## License
 
 The MIT License.
