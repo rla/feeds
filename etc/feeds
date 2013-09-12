@@ -1,0 +1,41 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          FeedsApp
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop FeedsApp
+### END INIT INFO
+
+dir=/home/feeds/feeds
+user=feeds
+script=app.js
+outfile=out.log
+errfile=err.log
+
+case "$1" in
+
+    'start')
+        cd $dir
+        sudo -u $user NODE_ENV=production forever start --minUptime 10000 --spinSleepTime 5000 \
+            --plain -a -o $outfile -e $errfile $script
+        ;;
+
+    'restart')
+        cd $dir
+        sudo -u $user NODE_ENV=production forever restart --minUptime 10000 --spinSleepTime 5000 \
+            --plain -a -o $outfile -e $errfile $script
+        ;;
+
+    'stop')
+        cd $dir
+        sudo -u $user forever stop --plain $script
+        ;;
+
+    *)
+        echo "Usage: $0 { start | restart | stop }"
+        ;;
+
+esac
