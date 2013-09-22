@@ -7,7 +7,7 @@
         "sqlite3": "*",
         "express": "*",
         "node-uuid": "*",
-        "fast-feed": "0.0.5",
+        "fast-feed": "0.0.7",
         "ejs": "*",
         "commander": "*",
         "debug": "*",
