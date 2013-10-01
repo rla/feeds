@@ -2,3 +2,5 @@ node_modules/
 config.json
 db.sqlite
 list.txt
+public/js/bundle/all.debug.js
+public/js/bundle/all.js
