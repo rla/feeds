@@ -1,5 +1,5 @@
-var ko = require('./knockout');
-ko.mapping = require('./knockout.mapping');
+var ko = require('knockout');
+ko.mapping = require('knockout.mapping');
 var route = require('./router');
 var XHRJSON = require('./xhr-json');
 
