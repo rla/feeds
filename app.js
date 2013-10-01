@@ -8,6 +8,7 @@ var ejs = require('ejs');
 var commander = require('commander');
 var package = require('./package.json');
 var db = require('./lib/db/db');
+var browserify = require('browserify-middleware');
 
 // When heap profiling is enables, load v8-profiler.
 // https://github.com/felixge/node-memory-leak-tutorial
@@ -71,6 +72,12 @@ app.get('/', function(req, res) {
 
     res.render('index.html', { loggedIn: !!req.session.ok });
 });
+
+// Browserified client code.
+
+browserify.settings.production('cache', '1y');
+
+app.get('/js/all.js', browserify(path.join(__dirname, 'public', 'js', 'app.js')));
 
 http.createServer(app).listen(app.get('port'), function() {
 

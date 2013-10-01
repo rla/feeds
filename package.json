@@ -11,7 +11,8 @@
         "ejs": "*",
         "commander": "*",
         "debug": "*",
-        "split": "*"
+        "split": "*",
+        "browserify-middleware": "*"
     },
     "devDependencies": {
         "heapdump": "*"

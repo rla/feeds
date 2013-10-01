@@ -1,3 +1,8 @@
+var ko = require('./knockout');
+ko.mapping = require('./knockout.mapping');
+var route = require('./router');
+var XHRJSON = require('./xhr-json');
+
 // Infinite scroll.
 // Not cross-browser.
 // Tested in FF 16, Chrome 2x?, Android 4.x.
