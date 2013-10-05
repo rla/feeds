@@ -72,7 +72,11 @@ var bundle = '/js/bundle/' + (process.env.NODE_ENV === 'production' ?
 
 app.get('/', function(req, res) {
 
-    res.render('index.html', { loggedIn: !!req.session.ok, bundle: bundle });
+    res.render('index.html', {
+        loggedIn: !!req.session.ok,
+        bundle: bundle,
+        version: package.version
+    });
 });
 
 http.createServer(app).listen(app.get('port'), function() {
