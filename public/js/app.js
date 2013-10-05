@@ -147,18 +147,6 @@ var app = {
         }
     },
 
-    // Shares article on Google Plus.
-    gplus: function(article) {
-        var share = 'https://plus.google.com/share?url=' +
-            encodeURIComponent(article.link);
-        if (app.authed()) {
-            article.is_gplussed(1);
-            XHRJSON.put('/article/' + article.uuid + '/gplussed', {});
-        }
-        var win = window.open(share, '_blank');
-        win.focus();
-    },
-
     // Loads batch of articles.
     // What to load, depends on app.what.
     loadArticles: function() {
@@ -185,7 +173,7 @@ var app = {
     appendRawArticles: function(articles) {
         var self = this;
         var mapping = {
-            observe: [ 'is_read', 'is_important', 'is_seen', 'is_gplussed' ]
+            observe: [ 'is_read', 'is_important', 'is_seen' ]
         };
         articles.forEach(function(article) {
             var date = new Date(article.published * 1000);
