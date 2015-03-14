@@ -1,19 +1,17 @@
 {
     "name": "rla-feeds",
-    "version": "0.0.4",
+    "version": "0.0.5",
+    "private": true,
     "dependencies": {
-        "async": "*",
-        "request": "*",
-        "sqlite3": "*",
-        "express": "*",
-        "node-uuid": "*",
-        "fast-feed": "0.x",
-        "ejs": "*",
-        "commander": "*",
-        "debug": "*",
-        "split": "*"
-    },
-    "devDependencies": {
-        "heapdump": "*"
+        "async": "~0.9.0",
+        "request": "~2.53.0",
+        "sqlite3": "~2.2.3",
+        "express": "~3.10.5",
+        "node-uuid": "~1.4.1",
+        "fast-feed": "~1.0.12",
+        "ejs": "~1.0.0",
+        "commander": "~2.2.0",
+        "debug": "~1.0.2",
+        "split": "~0.3.0"
     }
 }
