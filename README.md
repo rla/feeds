@@ -20,9 +20,10 @@ Warning: it might not work with old browsers. IE8 is certanly old by my definiti
 
 ## Installing
 
-First install dependencies using `npm install`.
-
-Then create database using `make db.sqlite`.
+ 1. First install dependencies using `npm install`.
+ 2. Then create database using `make db.sqlite`.
+ 3. Then copy `config.example.json` to `config.json`.
+ 4. Run app with `node app.js`.
 
 ## Importing feed addresses
 
