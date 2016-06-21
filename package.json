@@ -5,6 +5,7 @@
   "dependencies": {
     "async": "~0.9.0",
     "body-parser": "^1.15.2",
+    "commander": "^2.9.0",
     "cookies": "^0.6.1",
     "debug": "~1.0.2",
     "ejs": "^2.4.2",
