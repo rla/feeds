@@ -1,17 +1,25 @@
 {
-    "name": "rla-feeds",
-    "version": "0.0.5",
-    "private": true,
-    "dependencies": {
-        "async": "~0.9.0",
-        "request": "~2.53.0",
-        "sqlite3": "~3.1.4",
-        "express": "~3.10.5",
-        "node-uuid": "~1.4.1",
-        "fast-feed": "~1.5.3",
-        "ejs": "~1.0.0",
-        "commander": "~2.2.0",
-        "debug": "~1.0.2",
-        "split": "~0.3.0"
-    }
+  "name": "rla-feeds",
+  "version": "0.0.6",
+  "private": true,
+  "dependencies": {
+    "async": "~0.9.0",
+    "body-parser": "^1.15.2",
+    "cookies": "^0.6.1",
+    "debug": "~1.0.2",
+    "ejs": "^2.4.2",
+    "express": "^4.14.0",
+    "fast-feed": "~1.5.4",
+    "morgan": "^1.7.0",
+    "node-uuid": "~1.4.1",
+    "request": "~2.53.0",
+    "split": "~0.3.0",
+    "sqlite3": "~3.1.4"
+  },
+  "devDependencies": {
+    "eslint": "^2.13.1"
+  },
+  "scripts": {
+    "lint": "eslint app.js lib/"
+  }
 }

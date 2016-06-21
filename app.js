@@ -1,23 +1,11 @@
 var debug = require('debug')('app');
-var express = require('express');
-var http = require('http');
-var path = require('path');
 var feeds = require('./lib/feeds');
 var config = require('./config.json');
-var ejs = require('ejs');
-var commander = require('commander');
 var package = require('./package.json');
+var commander = require('commander');
+var express = require('express');
 var db = require('./lib/db/db');
-
-// When heap profiling is enables, load v8-profiler.
-// https://github.com/felixge/node-memory-leak-tutorial
-
-if (config.heapdump) {
-
-    require('heapdump');
-
-    console.log('PID: ' + process.pid);
-}
+var logger = require('./lib/logger');
 
 db.open(config.db);
 
@@ -30,7 +18,6 @@ commander.parse(process.argv);
 var polltime = config.polltime;
 
 if (polltime < 60) {
-
     throw new Error('Poll time must be at least 60 seconds.');
 }
 
@@ -38,72 +25,41 @@ if (polltime < 60) {
 
 var app = express();
 
+// Set up templating.
+
+require('./lib/ejs')(app);
+
+// Generic middleware stack.
+
+require('./lib/middleware')(app);
+
+// Set up handlers.
+
+require('./lib/handler')(app);
+
+// Starts the server.
+
 app.set('port', process.env.PORT || 3330);
 
-// Set up views.
-// Will use ejs with .html file name extension.
+var server = app.listen(app.get('port'), function() {
 
-ejs.open = '{{';
-ejs.close = '}}';
-
-app.set('views', __dirname + '/views');
-app.engine('html', ejs.renderFile);
-
-app.use(express.bodyParser());
-app.use(express.cookieParser());
-app.use(express.cookieSession({ secret: config.sessionSecret }));
-app.use(express.methodOverride());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
-
-if ('development' == app.get('env')) {
-
-    app.use(express.errorHandler());
-}
-
-// Set up routes.
-
-require('./lib/api')(app);
-require('./lib/import')(app);
-require('./lib/export')(app);
-
-var bundle = '/js/bundle/' + (process.env.NODE_ENV === 'production' ?
-    'all.min.js' : 'all.debug.js');
-
-app.get('/', function(req, res) {
-
-    res.render('index.html', {
-        loggedIn: !!req.session.ok,
-        bundle: bundle,
-        version: package.version
-    });
+    logger.info('Express server listening on port ' +
+        server.address().port);
 });
 
-http.createServer(app).listen(app.get('port'), function() {
-
-    debug('Express server listening on port: %s', app.get('port'));
-});
+// Runs immediate fetch or starts periodic polling.
 
 if (commander.fetch) {
-
+    logger.info('Single-time feed update triggered.');
     feeds.update(function() {
-
-        debug('Done');
+        logger.info('Finished feed update.');
     });
-
 } else {
-
     // Starts automatic updating for feeds.
-
     setInterval(function() {
-
-        debug('Updating feeds');
-
+        logger.info('Updating feed.');
         feeds.update(function() {
-
-            debug('Update finished');
+            logger.info('Update finished.');
         });
-
     }, polltime * 1000);
 }
-
