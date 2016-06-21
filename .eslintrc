@@ -1,0 +1,18 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 5,
+    "sourceType": "script"
+  },
+  "rules": {
+    "semi": "error",
+    "no-undef": "error"
+  },
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "globals": {
+    "Promise": true,
+    "ko": true
+  }
+}
