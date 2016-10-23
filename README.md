@@ -53,7 +53,7 @@ App's favicon is from [favicon.cc](http://www.favicon.cc/?action=icon&file_id=36
 The MIT License.
 
 ```
-Copyright (c) 2013 Raivo Laanemets
+Copyright (c) 2013-2016 Raivo Laanemets
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

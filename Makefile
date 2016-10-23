@@ -12,19 +12,19 @@ db.sqlite: schema/schema.sql
 	sqlite3 $@ < schema/migrations/002_add_error_column.sql
 
 $(bundle): $(bundle_deps)
-	browserify --outfile $@ \
+	node_modules/.bin/browserify --outfile $@ \
 		--entry public/js/app.js \
 		--require ./$(js)/knockout.js:knockout \
 		--require ./$(js)/knockout.mapping.js:knockout.mapping
 
 $(bundle_debug): $(bundle_deps)
-	browserify --debug --outfile $@ \
+	node_modules/.bin/browserify --debug --outfile $@ \
 		--entry public/js/app.js \
 		--require ./$(js)/knockout.js:knockout \
 		--require ./$(js)/knockout.mapping.js:knockout.mapping
 
 $(bundle_min): $(bundle)
-	uglifyjs $(bundle) -c -m > $@
+	node_modules/.bin/uglifyjs $(bundle) -c -m > $@
 
 clean:
 	rm -f $(bundle)

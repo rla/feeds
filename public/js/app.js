@@ -7,7 +7,7 @@ var XHRJSON = require('./xhr-json');
 // Not cross-browser.
 // Tested in FF 16, Chrome 2x?, Android 4.x.
 
-var scroll = (function() {
+(function() {
     var throttle = false;
     var lastOffset = 0; // used for detecting direction.
     document.addEventListener('scroll', function(event) {
@@ -26,7 +26,6 @@ var scroll = (function() {
             }, 3000);
         }
     }, false);
-    return {};
 })();
 
 // The main app object.
@@ -233,6 +232,18 @@ var app = {
         if (!app.authed()) { return; }
 
         XHRJSON.del('/feed/' + feed.uuid, function() {
+
+            app.reload();
+        });
+    },
+
+    // Helper to delete given article's feed.
+
+    deleteArticleFeed: function(article) {
+
+        if (!app.authed()) { return; }
+
+        XHRJSON.del('/feed/' + article.feed, function() {
 
             app.reload();
         });
