@@ -36,7 +36,7 @@ var app = {
     start: 0,
 
     // Used for paging the article views.
-    article_rowid: 0,
+    article_rowid: 9007199254740991,
 
     // Size of load batch.
     batch: 15,
@@ -184,7 +184,7 @@ var app = {
             article.title = article.title.replace(/<[^>]+>/g, '');
             self.array.push(ko.mapping.fromJS(article, mapping));
             if (typeof article.article_rowid === 'number' &&
-                article.article_rowid > self.article_rowid) {
+                article.article_rowid < self.article_rowid) {
                 self.article_rowid = article.article_rowid;
             }
         });
@@ -266,7 +266,7 @@ var app = {
     reset: function() {
         this.array.removeAll();
         this.start = 0;
-        this.article_rowid = 0;
+        this.article_rowid = 9007199254740991;
     },
 
     // Helper to display given feed articles.
