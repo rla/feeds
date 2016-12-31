@@ -81,16 +81,10 @@ var app = {
         if (app.authed()) {
             article.is_read(1);
             article.is_seen(1);
-            XHRJSON.put('/article/' + article.uuid + '/read', {}, function() {
-                var win = window.open(article.link, '_blank');
-                win.focus();
-            });
-        } else {
-            setTimeout(function() {
-                var win = window.open(article.link, '_blank');
-                win.focus();
-            }, 100);
+            XHRJSON.put('/article/' + article.uuid + '/read', {});
         }
+        var win = window.open(article.link, '_blank');
+        win.focus();
     },
 
     // Marks all current articles from
