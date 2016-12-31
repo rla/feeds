@@ -35,6 +35,9 @@ var app = {
     // Offset in current view.
     start: 0,
 
+    // Used for paging the article views.
+    article_rowid: 0,
+
     // Size of load batch.
     batch: 15,
 
@@ -78,10 +81,16 @@ var app = {
         if (app.authed()) {
             article.is_read(1);
             article.is_seen(1);
-            XHRJSON.put('/article/' + article.uuid + '/read', {});
+            XHRJSON.put('/article/' + article.uuid + '/read', {}, function() {
+                var win = window.open(article.link, '_blank');
+                win.focus();
+            });
+        } else {
+            setTimeout(function() {
+                var win = window.open(article.link, '_blank');
+                win.focus();
+            }, 100);
         }
-        var win = window.open(article.link, '_blank');
-        win.focus();
     },
 
     // Marks all current articles from
@@ -150,7 +159,7 @@ var app = {
     // What to load, depends on app.what.
     loadArticles: function() {
         var self = this;
-        var url = '/' + self.what + '/' + self.start + '/' + self.batch;
+        var url = '/' + self.what + '/' + self.article_rowid + '/' + self.batch;
         XHRJSON.get(url, function(err, result) {
             if (err || result.error) { return; }
             self.appendRawArticles(result.data);
@@ -161,7 +170,7 @@ var app = {
     loadSearch: function() {
         var self = this;
         var query = encodeURIComponent(self.query());
-        var url = '/search/' + query + '/' + self.start + '/' + self.batch;
+        var url = '/search/' + query + '/' + self.article_rowid + '/' + self.batch;
         XHRJSON.get(url, function(err, result) {
             if (err || result.error) { return; }
             self.appendRawArticles(result.data);
@@ -180,6 +189,10 @@ var app = {
             article.title = article.title || '';
             article.title = article.title.replace(/<[^>]+>/g, '');
             self.array.push(ko.mapping.fromJS(article, mapping));
+            if (typeof article.article_rowid === 'number' &&
+                article.article_rowid > self.article_rowid) {
+                self.article_rowid = article.article_rowid;
+            }
         });
         self.start += articles.length;
     },
@@ -208,19 +221,13 @@ var app = {
     // Loads batch of invalid feeds.
 
     loadInvalid: function() {
-
         var self = this;
         var url = '/invalid/' + self.start + '/' + self.batch;
-
         XHRJSON.get(url, function(err, result) {
-
             if (err || result.error) { return; }
-
             result.data.forEach(function(feed) {
-
                 self.array.push(feed);
             });
-
             self.start += 30;
         });
     },
@@ -228,11 +235,8 @@ var app = {
     // Helper to delete given feed.
 
     deleteFeed: function(feed) {
-
         if (!app.authed()) { return; }
-
         XHRJSON.del('/feed/' + feed.uuid, function() {
-
             app.reload();
         });
     },
@@ -240,11 +244,8 @@ var app = {
     // Helper to delete given article's feed.
 
     deleteArticleFeed: function(article) {
-
         if (!app.authed()) { return; }
-
         XHRJSON.del('/feed/' + article.feed, function() {
-
             app.reload();
         });
     },
@@ -252,11 +253,8 @@ var app = {
     // Marks feed error resolved.
 
     resolveFeed: function(feed) {
-
         if (!app.authed()) { return; }
-
         XHRJSON.put('/feed/' + feed.uuid + '/resolve', {}, function() {
-
             app.reload();
         });
     },
@@ -274,6 +272,7 @@ var app = {
     reset: function() {
         this.array.removeAll();
         this.start = 0;
+        this.article_rowid = 0;
     },
 
     // Helper to display given feed articles.

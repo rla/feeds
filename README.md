@@ -16,7 +16,6 @@ selected the parts of Bootstrap that I needed. The UI is built as a single-page 
 and XHR handling. SQLite is used as database on the server side.
 
 My live app is running at [http://feeds.rlaanemets.com/](http://feeds.rlaanemets.com/).
-Warning: it might not work with old browsers. IE8 is certanly old by my definition :).
 
 ## Installing
 
@@ -37,6 +36,12 @@ Then do a POST request to `/import` with a list of URLs. Example with curl:
 
 Where `list.txt` is the file containing URLs and `ctmzgmjaxbasklhntwvh` is your auth token obtained in
 the previous step.
+
+## Changelog
+
+2016-12-30: Upgrading to version 0.2.0 requires a migration, run with:
+
+    sqlite3 db.sqlite < schema/migrations/004_add_article_rowid.sql
 
 ## Debugging
 
