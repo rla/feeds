@@ -14,6 +14,5 @@
         }
     ],
     "sessionSecret": "secret",
-    "heapdump": false,
     "title": "Feeds"
 }
