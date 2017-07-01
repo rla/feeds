@@ -2,7 +2,7 @@
 
 My personal web-based replacement for Google Reader and other feed readers. It tracks
 seen/read/important articles and is built for speed. I currently follow
-about 400 feeds and some readers had trouble coping with this amount of feeds.
+about 600 feeds and some readers had trouble coping with this amount of feeds.
 
 ## How is it built
 
@@ -15,14 +15,17 @@ selected the parts of Bootstrap that I needed. The UI is built as a single-page 
 [KnockoutJS](http://knockoutjs.com/) framework. It uses two additional small libs for routing
 and XHR handling. SQLite is used as database on the server side.
 
+Since 01-07-2017 the user interface has been rewritten in React. There is no difference
+in functionality, however.
+
 My live app is running at [http://feeds.rlaanemets.com/](http://feeds.rlaanemets.com/).
 
 ## Installing
 
- 1. First install dependencies using `npm install`.
+ 1. First install dependencies using `npm install --production`.
  2. Then create database using `make db.sqlite`.
  3. Then copy `config.example.json` to `config.json`.
- 4. Run app with `node app.js`.
+ 4. Run app with `NODE_ENV=production node app.js`.
 
 ## Importing feed addresses
 
@@ -38,6 +41,8 @@ Where `list.txt` is the file containing URLs and `ctmzgmjaxbasklhntwvh` is your 
 the previous step.
 
 ## Changelog
+
+2017-07-01: UI rewrite to React.
 
 2016-12-30: Upgrading to version 0.2.0 requires a migration, run with:
 
@@ -58,7 +63,7 @@ App's favicon is from [favicon.cc](http://www.favicon.cc/?action=icon&file_id=36
 The MIT License.
 
 ```
-Copyright (c) 2013-2016 Raivo Laanemets
+Copyright (c) 2013-2017 Raivo Laanemets
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

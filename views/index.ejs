@@ -23,98 +23,23 @@
             .buttons {
                 margin-top: 0.5em;
             }
+            .btn + .btn,
+            input + input,
+            input + button {
+                margin-left: 5px;
+            }
         </style>
         <script>window.loggedIn = '<%= loggedIn %>' === 'true';</script>
     </head>
     <body>
-        <div class="spin" data-bind="visible: spin()"></div>
-        <ul class="nav nav-pills">
-            <li data-bind="css: { active: menu() === 'feeds' }">
-                <a href="#feeds">Feeds</a>
-            </li>
-            <li data-bind="css: { active: menu() === 'unseen' }">
-                <a href="#unseen">Unseen</a>
-            </li>
-            <li data-bind="css: { active: menu() === 'important' }">
-                <a href="#important">Important</a>
-            </li>
-            <li data-bind="css: { active: menu() === 'search' }">
-                <a href="#search">Search</a>
-            </li>
-            <li data-bind="css: { active: menu() === 'invalid' }">
-                <a href="#invalid">Invalid</a>
-            </li>
-            <li style="display: none"
-                data-bind="visible: authed()">
-                <a href="#" data-bind="click: logout">Logout</a>
-            </li>
-        </ul>
-        <form class="form-inline" style="display: none"
-            data-bind="visible: menu() === 'search', submit: search">
-            <input type="text" name="query"
-                placeholder="search term" data-bind="value: query">
-            <button type="submit" class="btn">Search</button>
-        </form>
-        <form class="form-inline" style="display: none"
-            data-bind="visible: !authed() &amp;&amp; menu() !== 'search', submit: login">
-            <input type="text" name="user" placeholder="user"
-                class="input-small" data-bind="value: user">
-            <input type="password" name="pass" placeholder="pass"
-                class="input-small" data-bind="value: pass">
-            <button type="submit" class="btn">Login</button>
-        </form>
-        <div data-bind="template: { foreach: array, name: type() }"></div>
-        <script type="text/html" id="article">
-            <div class="well well-small">
-                <span class="bold" data-bind="text: title"></span><br>
-                Published <span data-bind="text: date"></span> in
-                <a href="#" data-bind="text: feed_title, click: $root.viewArticleFeed"></a></span>
-                <div class="buttons">
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.deleteArticleFeed, css: { 'disabled': !$root.authed() }">Delete feed</a>
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.markRead, css: { 'btn-inverse': is_read, 'disabled': !$root.authed() }">Mark read</a>
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.important, css: { 'btn-danger': is_important, 'disabled': !$root.authed() }">Important</a>
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.seenTop, css: { 'btn-inverse': is_seen, 'disabled': !$root.authed() }">Seen</a>
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.read, css: { 'btn-inverse': is_read }">Read</a>
-                </div>
-            </div>
-        </script>
-        <script type="text/html" id="feed">
-            <div class="well well-small">
-                <span class="bold" data-bind="text: title"></span><br>
-                <span data-bind="text: unread"></span> unread,
-                <span data-bind="text: unseen"></span> unseen,
-                <span data-bind="text: important"></span> important
-                <div class="buttons">
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.deleteFeed, css: { 'disabled': !$root.authed() }">Delete</a>
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.allSeen, css: { 'disabled': !$root.authed() }">All seen</a>
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.allRead, css: { 'disabled': !$root.authed() }">All read</a>
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.viewFeed">View</a>
-                </div>
-            </div>
-        </script>
-        <script type="text/html" id="invalid">
-            <div class="well well-small">
-                <span class="bold" data-bind="text: title"></span><br>
-                Error: <span data-bind="text: error"></span>
-                <div class="buttons">
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.deleteFeed, css: { 'disabled': !$root.authed() }">Delete</a>
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.resolveFeed, css: { 'disabled': !$root.authed() }">Resolve</a>
-                    <a href="#" class="btn btn-small"
-                        data-bind="click: $root.viewFeed">View</a>
-                </div>
-            </div>
-        </script>
-        <script src="<%= bundle %>?version=<%= version %>"></script>
+        <div id="root"></div>
+        <% if (production) { %>
+            <script src="/js/react/react.min.js"></script>
+            <script src="/js/react/react-dom.min.js"></script>
+        <% } else { %>
+            <script src="/js/react/react.js"></script>
+            <script src="/js/react/react-dom.js"></script>
+        <% } %>
+        <script src="/js/app.bundle.js"></script>
     </body>
 </html>

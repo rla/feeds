@@ -1,7 +1,10 @@
 {
   "parserOptions": {
-    "ecmaVersion": 5,
-    "sourceType": "script"
+    "ecmaVersion": 8,
+    "sourceType": "script",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "rules": {
     "semi": "error",
@@ -13,6 +16,9 @@
   },
   "globals": {
     "Promise": true,
-    "ko": true
+    "ko": true,
+    "route": true,
+    "React": true,
+    "ReactDOM": true
   }
 }
