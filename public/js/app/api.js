@@ -44,13 +44,14 @@ const checkResponse = (json) => {
     }
 };
 
-// Helper to run a GET request to retrieve
-// data in JSON format.
+// Small wrapper around the fetch API to
+// support AJAX spinner and simple error
+// handling and reporting.
 
-const getJSON = async (url) => {
+const requestFetch = async (url, options) => {
     try {
         startRequest();
-        const response = await fetch(url);
+        const response = await fetch(url, options);
         const json = await response.json();
         checkResponse(json);
         return json.data;
@@ -59,69 +60,48 @@ const getJSON = async (url) => {
     } finally {
         endRequest();
     }
+};
+
+// Helper to create fetch API options
+// to post a JSON body with the given data.
+
+const jsonBodyOptions = (data) => {
+    return {
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    };
+};
+
+// Helper to run a GET request to retrieve
+// data in JSON format.
+
+const getJSON = async (url) => {
+    return requestFetch(url);
 };
 
 // Helper to post data in JSON format.
 
 const postJSON = async (url, data) => {
-    try {
-        startRequest();
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-            credentials: 'include'
-        });
-        const json = await response.json();
-        checkResponse(json);
-        return json.data;
-    } catch (err) {
-        handleError(err);
-    } finally {
-        endRequest();
-    }
+    return requestFetch(url, Object.assign({
+        method: 'POST',
+        credentials: 'include'
+    }, jsonBodyOptions(data)));
 };
 
 // Helper to PUT data in JSON format.
 
 const putJSON = async (url, data) => {
-    try {
-        startRequest();
-        const response = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data || {}),
-            credentials: 'include'
-        });
-        const json = await response.json();
-        checkResponse(json);
-        return json.data;
-    } catch (err) {
-        handleError(err);
-    } finally {
-        endRequest();
-    }
+    return requestFetch(url, Object.assign({
+        method: 'PUT',
+        credentials: 'include'
+    }, jsonBodyOptions(data)));
 };
 
 // Helper to run a delete request.
 
 const deleteRequest = async (url) => {
-    try {
-        startRequest();
-        const response = await fetch(url,
-            { method: 'DELETE', credentials: 'include' });
-        const json = await response.json();
-        checkResponse(json);
-        return json.data;
-    } catch (err) {
-        handleError(err);
-    } finally {
-        endRequest();
-    }
+    return requestFetch(url,
+        { method: 'DELETE', credentials: 'include' });    
 };
 
 // List of articles from the given source.
