@@ -7,6 +7,7 @@ const Menu = require('./menu');
 const Login = require('./login');
 const Search = require('./search');
 const Spinner = require('./spinner');
+const Urls = require('./urls');
 
 // The top-level app component.
 
@@ -73,11 +74,18 @@ module.exports = class App extends React.Component {
             <div>
                 <Spinner/>
                 <Menu menu={this.state.menu} onLogout={this.onLogout} authenticated={this.state.authenticated}/>
-                {!this.state.authenticated && displayType !== 'search' && <Login onAuthenticated={this.onAuthenticated}/>}
-                {displayType === 'article' && <ArticleList authenticated={this.state.authenticated} source={this.state.display} args={this.state.args}/>}
-                {displayType === 'invalid' && <InvalidList authenticated={this.state.authenticated} args={this.state.args}/>}
-                {displayType === 'feeds' && <FeedList authenticated={this.state.authenticated} args={this.state.args}/>}
-                {displayType === 'search' && <Search args={this.state.args}/>}
+                {!this.state.authenticated && displayType !== 'search' &&
+                    <Login onAuthenticated={this.onAuthenticated}/>}
+                {displayType === 'feeds' && this.state.authenticated &&
+                    <Urls/>}
+                {displayType === 'article' &&
+                    <ArticleList authenticated={this.state.authenticated} source={this.state.display} args={this.state.args}/>}
+                {displayType === 'invalid' &&
+                    <InvalidList authenticated={this.state.authenticated} args={this.state.args}/>}
+                {displayType === 'feeds' &&
+                    <FeedList authenticated={this.state.authenticated} args={this.state.args}/>}
+                {displayType === 'search' &&
+                    <Search args={this.state.args}/>}
             </div>
         );
     }

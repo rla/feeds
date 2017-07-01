@@ -249,6 +249,12 @@ exports.resolveFeed = async feedId => {
     return putJSON(`/feed/${feedId}/resolve`);
 };
 
+// Adds given feed URLs.
+
+exports.addUrls = async urls => {
+    return postJSON('/urls', urls);
+};
+
 // Starts an user session.
 
 exports.login = async (user, pass) => {
@@ -407,6 +413,7 @@ const Menu = __webpack_require__(14);
 const Login = __webpack_require__(15);
 const Search = __webpack_require__(16);
 const Spinner = __webpack_require__(17);
+const Urls = __webpack_require__(18);
 
 // The top-level app component.
 
@@ -475,6 +482,7 @@ module.exports = class App extends React.Component {
             React.createElement(Spinner, null),
             React.createElement(Menu, { menu: this.state.menu, onLogout: this.onLogout, authenticated: this.state.authenticated }),
             !this.state.authenticated && displayType !== 'search' && React.createElement(Login, { onAuthenticated: this.onAuthenticated }),
+            displayType === 'feeds' && this.state.authenticated && React.createElement(Urls, null),
             displayType === 'article' && React.createElement(ArticleList, { authenticated: this.state.authenticated, source: this.state.display, args: this.state.args }),
             displayType === 'invalid' && React.createElement(InvalidList, { authenticated: this.state.authenticated, args: this.state.args }),
             displayType === 'feeds' && React.createElement(FeedList, { authenticated: this.state.authenticated, args: this.state.args }),
@@ -488,7 +496,6 @@ module.exports = class App extends React.Component {
 /***/ (function(module, exports, __webpack_require__) {
 
 const api = __webpack_require__(0);
-const router = __webpack_require__(2);
 const scroll = __webpack_require__(1);
 const immut = __webpack_require__(7);
 const Article = __webpack_require__(8);
@@ -1284,6 +1291,60 @@ module.exports = class Spinner extends React.Component {
             'div',
             null,
             this.state.visible && React.createElement('div', { className: 'spin' })
+        );
+    }
+};
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const api = __webpack_require__(0);
+const router = __webpack_require__(2);
+
+// Form to add new feed URLs.
+
+module.exports = class Urls extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { lines: '' };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    // Handles the input change.
+
+    handleChange(e) {
+        this.setState({ lines: e.target.value });
+    }
+
+    // Handles the submission of the form.
+
+    async handleSubmit(e) {
+        e.preventDefault();
+        const lines = this.state.lines.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
+        await api.addUrls(lines);
+        this.setState({ lines: '' });
+        router.refresh();
+    }
+
+    render() {
+        return React.createElement(
+            'form',
+            { onSubmit: this.handleSubmit },
+            React.createElement(
+                'label',
+                { htmlFor: 'urls' },
+                'Add list of feed URLs (one per line)'
+            ),
+            React.createElement('textarea', { id: 'urls', onChange: this.handleChange, rows: '3', value: this.state.lines }),
+            React.createElement('br', null),
+            React.createElement(
+                'button',
+                { type: 'submit', className: 'btn' },
+                'Add'
+            )
         );
     }
 };

@@ -1,5 +1,4 @@
 const api = require('../api');
-const router = require('../router');
 const scroll = require('../scroll');
 const immut = require('../immut');
 const Article = require('./article');

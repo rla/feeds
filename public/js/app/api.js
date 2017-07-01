@@ -181,6 +181,12 @@ exports.resolveFeed = async (feedId) => {
     return putJSON(`/feed/${feedId}/resolve`);
 };
 
+// Adds given feed URLs.
+
+exports.addUrls = async (urls) => {
+    return postJSON('/urls', urls);
+};
+
 // Starts an user session.
 
 exports.login = async (user, pass) => {
