@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -320,9 +320,58 @@ document.addEventListener('scroll', event => {
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+const routes = [];
+
+// Sets up a route.
+
+exports.route = (regexp, cb) => {
+    if (!(regexp instanceof RegExp)) {
+        throw new Error('Route must be a regexp.');
+    }
+    if (typeof cb !== 'function') {
+        throw new Error('Route handler must be a function.');
+    }
+    routes.push({ regexp: regexp, cb: cb });
+};
+
+// Programmatically go a page.
+// Supports extra arguments.
+
+exports.go = (page, ...extra) => {
+    window.location.hash = `#${page}${extra.length > 0 ? '/' + extra.join('/') : ''}`;
+};
+
+// Re-dispatches the current route.
+
+exports.refresh = () => {
+    activate();
+};
+
+// Looks for matching routes. Picks first.
+
+const activate = () => {
+    const hash = window.location.hash.substring(1);
+    for (const route of routes) {
+        const match = hash.match(route.regexp);
+        if (match) {
+            route.cb.apply(null, match.slice(1, match.length));
+            break;
+        }
+    }
+};
+
+// Sets up hash change and initial callbacks.
+
+window.addEventListener('load', activate, false);
+window.addEventListener('hashchange', activate, false);
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const classlist = __webpack_require__(8);
+const classlist = __webpack_require__(9);
 
 module.exports = props => {
     // Helper to set the button CSS classes.
@@ -353,26 +402,26 @@ module.exports = props => {
 };
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const scroll = __webpack_require__(1);
-const App = __webpack_require__(4);
-ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
+const scroll = __webpack_require__(1);
+const App = __webpack_require__(5);
+ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
 const api = __webpack_require__(0);
-const router = __webpack_require__(18);
-const ArticleList = __webpack_require__(5);
-const InvalidList = __webpack_require__(9);
-const FeedList = __webpack_require__(13);
-const Menu = __webpack_require__(11);
-const Login = __webpack_require__(12);
-const Search = __webpack_require__(15);
-const Spinner = __webpack_require__(16);
+const router = __webpack_require__(2);
+const ArticleList = __webpack_require__(6);
+const InvalidList = __webpack_require__(10);
+const FeedList = __webpack_require__(12);
+const Menu = __webpack_require__(14);
+const Login = __webpack_require__(15);
+const Search = __webpack_require__(16);
+const Spinner = __webpack_require__(17);
 
 // The top-level app component.
 
@@ -450,14 +499,14 @@ module.exports = class App extends React.Component {
 };
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const api = __webpack_require__(0);
-const router = __webpack_require__(18);
+const router = __webpack_require__(2);
 const scroll = __webpack_require__(1);
-const immut = __webpack_require__(6);
-const Article = __webpack_require__(7);
+const immut = __webpack_require__(7);
+const Article = __webpack_require__(8);
 
 const MAX_ROW_ID = 9007199254740991;
 
@@ -648,7 +697,7 @@ module.exports = class ArticleList extends React.Component {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 // Sets item using the callback. Returns
@@ -666,10 +715,10 @@ exports.modifyItem = (array, index, cb) => {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Button = __webpack_require__(2);
+const Button = __webpack_require__(3);
 
 module.exports = props => {
     const authenticated = props.authenticated;
@@ -730,7 +779,7 @@ module.exports = props => {
 };
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 // Helper to render a classlist.
@@ -740,12 +789,12 @@ module.exports = classes => {
 };
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const api = __webpack_require__(0);
 const scroll = __webpack_require__(1);
-const Invalid = __webpack_require__(10);
+const Invalid = __webpack_require__(11);
 
 // Helper to handle the invalid feed list display.
 
@@ -842,10 +891,10 @@ module.exports = class InvalidList extends React.Component {
 };
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Button = __webpack_require__(2);
+const Button = __webpack_require__(3);
 
 // Displays one invalid feed list item.
 
@@ -889,138 +938,12 @@ module.exports = props => {
 };
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-module.exports = props => {
-    const logout = e => {
-        e.preventDefault();
-        props.onLogout();
-    };
-    return React.createElement(
-        'ul',
-        { className: 'nav nav-pills' },
-        React.createElement(
-            'li',
-            { className: props.menu === 'feeds' ? 'active' : '' },
-            React.createElement(
-                'a',
-                { href: '#feeds' },
-                'Feeds'
-            )
-        ),
-        React.createElement(
-            'li',
-            { className: props.menu === 'unseen' ? 'active' : '' },
-            React.createElement(
-                'a',
-                { href: '#unseen' },
-                'Unseen'
-            )
-        ),
-        React.createElement(
-            'li',
-            { className: props.menu === 'important' ? 'active' : '' },
-            React.createElement(
-                'a',
-                { href: '#important' },
-                'Important'
-            )
-        ),
-        React.createElement(
-            'li',
-            { className: props.menu === 'search' ? 'active' : '' },
-            React.createElement(
-                'a',
-                { href: '#search' },
-                'Search'
-            )
-        ),
-        React.createElement(
-            'li',
-            { className: props.menu === 'invalid' ? 'active' : '' },
-            React.createElement(
-                'a',
-                { href: '#invalid' },
-                'Invalid'
-            )
-        ),
-        props.authenticated && React.createElement(
-            'li',
-            null,
-            React.createElement(
-                'a',
-                { href: '#', onClick: logout },
-                'Logout'
-            )
-        )
-    );
-};
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const api = __webpack_require__(0);
-
-// Login form.
-
-module.exports = class Login extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: '',
-            pass: ''
-        };
-        this.handleUserChange = this.handleUserChange.bind(this);
-        this.handlePassChange = this.handlePassChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleUserChange(e) {
-        this.setState({ user: e.target.value });
-    }
-
-    handlePassChange(e) {
-        this.setState({ pass: e.target.value });
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        this.login();
-    }
-
-    async login() {
-        if (await api.login(this.state.user, this.state.pass)) {
-            this.props.onAuthenticated();
-        }
-    }
-
-    render() {
-        return React.createElement(
-            'form',
-            { className: 'form-inline', onSubmit: this.handleSubmit },
-            React.createElement('input', { type: 'text', name: 'user', placeholder: 'user', className: 'input-small',
-                value: this.state.user, onChange: this.handleUserChange }),
-            React.createElement('input', { type: 'password', name: 'pass', placeholder: 'pass', className: 'input-small',
-                value: this.state.pass, onChange: this.handlePassChange }),
-            React.createElement(
-                'button',
-                { type: 'submit', className: 'btn' },
-                'Login'
-            )
-        );
-    }
-};
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const api = __webpack_require__(0);
 const scroll = __webpack_require__(1);
-const Feed = __webpack_require__(14);
+const Feed = __webpack_require__(13);
 
 // Helper to handle the feeds list display.
 
@@ -1122,10 +1045,10 @@ module.exports = class FeedList extends React.Component {
 };
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Button = __webpack_require__(2);
+const Button = __webpack_require__(3);
 
 // Displays one feed list item.
 
@@ -1179,10 +1102,136 @@ module.exports = props => {
 };
 
 /***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+module.exports = props => {
+    const logout = e => {
+        e.preventDefault();
+        props.onLogout();
+    };
+    return React.createElement(
+        'ul',
+        { className: 'nav nav-pills' },
+        React.createElement(
+            'li',
+            { className: props.menu === 'feeds' ? 'active' : '' },
+            React.createElement(
+                'a',
+                { href: '#feeds' },
+                'Feeds'
+            )
+        ),
+        React.createElement(
+            'li',
+            { className: props.menu === 'unseen' ? 'active' : '' },
+            React.createElement(
+                'a',
+                { href: '#unseen' },
+                'Unseen'
+            )
+        ),
+        React.createElement(
+            'li',
+            { className: props.menu === 'important' ? 'active' : '' },
+            React.createElement(
+                'a',
+                { href: '#important' },
+                'Important'
+            )
+        ),
+        React.createElement(
+            'li',
+            { className: props.menu === 'search' ? 'active' : '' },
+            React.createElement(
+                'a',
+                { href: '#search' },
+                'Search'
+            )
+        ),
+        React.createElement(
+            'li',
+            { className: props.menu === 'invalid' ? 'active' : '' },
+            React.createElement(
+                'a',
+                { href: '#invalid' },
+                'Invalid'
+            )
+        ),
+        props.authenticated && React.createElement(
+            'li',
+            null,
+            React.createElement(
+                'a',
+                { href: '#', onClick: logout },
+                'Logout'
+            )
+        )
+    );
+};
+
+/***/ }),
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const router = __webpack_require__(18);
+const api = __webpack_require__(0);
+
+// Login form.
+
+module.exports = class Login extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: '',
+            pass: ''
+        };
+        this.handleUserChange = this.handleUserChange.bind(this);
+        this.handlePassChange = this.handlePassChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleUserChange(e) {
+        this.setState({ user: e.target.value });
+    }
+
+    handlePassChange(e) {
+        this.setState({ pass: e.target.value });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        this.login();
+    }
+
+    async login() {
+        if (await api.login(this.state.user, this.state.pass)) {
+            this.props.onAuthenticated();
+        }
+    }
+
+    render() {
+        return React.createElement(
+            'form',
+            { className: 'form-inline', onSubmit: this.handleSubmit },
+            React.createElement('input', { type: 'text', name: 'user', placeholder: 'user', className: 'input-small',
+                value: this.state.user, onChange: this.handleUserChange }),
+            React.createElement('input', { type: 'password', name: 'pass', placeholder: 'pass', className: 'input-small',
+                value: this.state.pass, onChange: this.handlePassChange }),
+            React.createElement(
+                'button',
+                { type: 'submit', className: 'btn' },
+                'Login'
+            )
+        );
+    }
+};
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const router = __webpack_require__(2);
 
 // Search form.
 
@@ -1225,7 +1274,7 @@ module.exports = class Search extends React.Component {
 };
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const api = __webpack_require__(0);
@@ -1253,56 +1302,6 @@ module.exports = class Spinner extends React.Component {
         );
     }
 };
-
-/***/ }),
-/* 17 */,
-/* 18 */
-/***/ (function(module, exports) {
-
-const routes = [];
-
-// Sets up a route.
-
-exports.route = (regexp, cb) => {
-    if (!(regexp instanceof RegExp)) {
-        throw new Error('Route must be a regexp.');
-    }
-    if (typeof cb !== 'function') {
-        throw new Error('Route handler must be a function.');
-    }
-    routes.push({ regexp: regexp, cb: cb });
-};
-
-// Programmatically go a page.
-// Supports extra arguments.
-
-exports.go = (page, ...extra) => {
-    window.location.hash = `#${page}${extra.length > 0 ? '/' + extra.join('/') : ''}`;
-};
-
-// Re-dispatches the current route.
-
-exports.refresh = () => {
-    activate();
-};
-
-// Looks for matching routes. Picks first.
-
-const activate = () => {
-    const hash = window.location.hash.substring(1);
-    for (const route of routes) {
-        const match = hash.match(route.regexp);
-        if (match) {
-            route.cb.apply(null, match.slice(1, match.length));
-            break;
-        }
-    }
-};
-
-// Sets up hash change and initial callbacks.
-
-window.addEventListener('load', activate, false);
-window.addEventListener('hashchange', activate, false);
 
 /***/ })
 /******/ ]);
