@@ -16,7 +16,7 @@ module.exports = class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {            
-            authenticated: false,
+            authenticated: window.loggedIn,
             display: null,
             args: {}
         };
