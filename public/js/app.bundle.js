@@ -195,7 +195,12 @@ const deleteRequest = async url => {
 // List of articles from the given source.
 
 exports.articles = async (source, rowid, batch) => {
-    return getJSON(`/${source}/${rowid}/${batch}`);
+    const articles = await getJSON(`/${source}/${rowid}/${batch}`);
+    for (const article of articles) {
+        const date = new Date(article.published * 1000);
+        article.date = date.toISOString().substring(0, 10);
+    }
+    return articles;
 };
 
 // List of invalid feeds.
