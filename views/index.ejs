@@ -3,8 +3,15 @@
     <head>
         <title><%= title %></title>
         <meta charset="utf-8">
+        <script>
+            var asyncFunctions = (function() {
+                try { new Function('async () => {}')(); } catch (err) { return false; }
+                return true;
+            })();
+            if (!asyncFunctions) { window.location.href = '/old'; }
+        </script>
         <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">        
         <style>
             body {
                 padding: 1em;
