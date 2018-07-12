@@ -36,12 +36,32 @@
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -59,12 +79,162 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const scroll = __webpack_require__(1);
+const App = __webpack_require__(2);
+ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+// Infinite scroll.
+// Not cross-browser.
+// Tested in FF 16, Chrome 2x?, Android 4.x.
+
+const handlers = [];
+
+exports.addHandler = cb => {
+    handlers.push(cb);
+};
+
+exports.removeHandler = cb => {
+    const index = handlers.indexOf(cb);
+    if (index >= 0) {
+        handlers.splice(index, 1);
+    }
+};
+
+const callHandlers = () => {
+    for (const cb of handlers) {
+        cb();
+    }
+};
+
+let throttle = false;
+let lastOffset = 0; // used for detecting direction.
+document.addEventListener('scroll', event => {
+    const offset = window.pageYOffset;
+    const total = document.body.scrollHeight;
+    const win = window.innerHeight;
+    const toBotton = offset > lastOffset;
+    lastOffset = offset;
+    var atBottom = offset > total - win - 100;
+    if (toBotton && atBottom && !throttle) {
+        throttle = true;
+        callHandlers();
+        setTimeout(function () {
+            throttle = false;
+        }, 3000);
+    }
+}, false);
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const api = __webpack_require__(3);
+const router = __webpack_require__(4);
+const ArticleList = __webpack_require__(5);
+const InvalidList = __webpack_require__(10);
+const FeedList = __webpack_require__(12);
+const Menu = __webpack_require__(14);
+const Login = __webpack_require__(15);
+const Search = __webpack_require__(16);
+const Spinner = __webpack_require__(17);
+const Urls = __webpack_require__(18);
+
+// The top-level app component.
+
+module.exports = class App extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            authenticated: window.loggedIn,
+            display: null,
+            args: {}
+        };
+        this.onLogout = this.onLogout.bind(this);
+        this.onAuthenticated = this.onAuthenticated.bind(this);
+    }
+
+    // Logs out the application.
+
+    async onLogout() {
+        try {
+            await api.logout();
+            this.setState({ authenticated: false });
+        } catch (err) {
+            alert(`Failed to log out: ${err}.`);
+        }
+    }
+
+    // Called when user is successfully authenticated.
+
+    onAuthenticated() {
+        this.setState({ authenticated: true });
+    }
+
+    // Helper to set the displayed page from the router.
+
+    setDisplay(display, args) {
+        this.setState({ display: display, args: args || {} });
+    }
+
+    // Sets up routes. This uses the basic hash router.
+
+    componentDidMount() {
+        router.route(/^important/, () => this.setDisplay('important'));
+        router.route(/^all/, () => this.setDisplay('all'));
+        router.route(/^unread/, () => this.setDisplay('unread'));
+        router.route(/^unseen/, () => this.setDisplay('unseen'));
+        router.route(/^feeds/, () => this.setDisplay('feeds'));
+        router.route(/^invalid/, () => this.setDisplay('invalid'));
+        router.route(/^feed\/([A-Za-z0-9\-]+)/, uuid => this.setDisplay('feed', { id: uuid }));
+        router.route(/^search$/, () => this.setDisplay('search_form'));
+        router.route(/^search\/(.+)/, query => this.setDisplay('search', { query }));
+        router.route(/.*/, () => router.go('unseen'));
+    }
+
+    // Renders the component.
+
+    render() {
+        const display = this.state.display;
+        const displayTypes = {
+            article: ['all', 'important', 'unseen', 'feed', 'search'],
+            invalid: ['invalid'],
+            feeds: ['feeds'],
+            search: ['search_form']
+        };
+        const displayType = Object.keys(displayTypes).find(key => {
+            return displayTypes[key].indexOf(display) >= 0;
+        });
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(Spinner, null),
+            React.createElement(Menu, { menu: this.state.menu, onLogout: this.onLogout, authenticated: this.state.authenticated }),
+            !this.state.authenticated && displayType !== 'search' && React.createElement(Login, { onAuthenticated: this.onAuthenticated }),
+            displayType === 'feeds' && this.state.authenticated && React.createElement(Urls, null),
+            displayType === 'article' && React.createElement(ArticleList, { authenticated: this.state.authenticated, source: this.state.display, args: this.state.args }),
+            displayType === 'invalid' && React.createElement(InvalidList, { authenticated: this.state.authenticated, args: this.state.args }),
+            displayType === 'feeds' && React.createElement(FeedList, { authenticated: this.state.authenticated, args: this.state.args }),
+            displayType === 'search' && React.createElement(Search, { args: this.state.args })
+        );
+    }
+};
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 // List of handlers to display/hide AJAX spinner.
@@ -262,55 +432,16 @@ exports.login = async (user, pass) => {
     return (await postJSON('/login', data)).ok;
 };
 
+// Ends the user session.
+
+exports.logout = async () => {
+    return postJSON('/logout');
+};
+
 exports.BATCH = 30;
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-// Infinite scroll.
-// Not cross-browser.
-// Tested in FF 16, Chrome 2x?, Android 4.x.
-
-const handlers = [];
-
-exports.addHandler = cb => {
-    handlers.push(cb);
-};
-
-exports.removeHandler = cb => {
-    const index = handlers.indexOf(cb);
-    if (index >= 0) {
-        handlers.splice(index, 1);
-    }
-};
-
-const callHandlers = () => {
-    for (const cb of handlers) {
-        cb();
-    }
-};
-
-let throttle = false;
-let lastOffset = 0; // used for detecting direction.
-document.addEventListener('scroll', event => {
-    const offset = window.pageYOffset;
-    const total = document.body.scrollHeight;
-    const win = window.innerHeight;
-    const toBotton = offset > lastOffset;
-    lastOffset = offset;
-    var atBottom = offset > total - win - 100;
-    if (toBotton && atBottom && !throttle) {
-        throttle = true;
-        callHandlers();
-        setTimeout(function () {
-            throttle = false;
-        }, 3000);
-    }
-}, false);
-
-/***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, exports) {
 
 const routes = [];
@@ -359,146 +490,13 @@ window.addEventListener('load', activate, false);
 window.addEventListener('hashchange', activate, false);
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const classlist = __webpack_require__(9);
-
-module.exports = props => {
-    // Helper to set the button CSS classes.
-    const classes = {
-        'btn': true,
-        'btn-small': true,
-        'btn-danger': props.danger,
-        'btn-inverse': props.inverse,
-        'disabled': props.disabled
-    };
-    const href = props.href || '#';
-    // Helper that automatically calls preventDefault
-    // on the DOM event when the callback is set.
-    const preventDefault = cb => {
-        return e => {
-            if (typeof cb === 'function') {
-                e.preventDefault();
-                cb();
-            }
-        };
-    };
-    return React.createElement(
-        'a',
-        { href: href, onClick: preventDefault(props.onClick),
-            className: classlist(classes) },
-        props.children
-    );
-};
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const scroll = __webpack_require__(1);
-const App = __webpack_require__(5);
-ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
-
-/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const api = __webpack_require__(0);
-const router = __webpack_require__(2);
-const ArticleList = __webpack_require__(6);
-const InvalidList = __webpack_require__(10);
-const FeedList = __webpack_require__(12);
-const Menu = __webpack_require__(14);
-const Login = __webpack_require__(15);
-const Search = __webpack_require__(16);
-const Spinner = __webpack_require__(17);
-const Urls = __webpack_require__(18);
-
-// The top-level app component.
-
-module.exports = class App extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            authenticated: window.loggedIn,
-            display: null,
-            args: {}
-        };
-        this.onLogout = this.onLogout.bind(this);
-        this.onAuthenticated = this.onAuthenticated.bind(this);
-    }
-
-    // Logs out the application.
-
-    onLogout() {
-        this.setState({ authenticated: false });
-    }
-
-    // Called when user is successfully authenticated.
-
-    onAuthenticated() {
-        this.setState({ authenticated: true });
-    }
-
-    // Helper to set the displayed page from the router.
-
-    setDisplay(display, args) {
-        this.setState({ display: display, args: args || {} });
-    }
-
-    // Sets up routes. This uses the basic hash router.
-
-    componentDidMount() {
-        router.route(/^important/, () => this.setDisplay('important'));
-        router.route(/^all/, () => this.setDisplay('all'));
-        router.route(/^unread/, () => this.setDisplay('unread'));
-        router.route(/^unseen/, () => this.setDisplay('unseen'));
-        router.route(/^feeds/, () => this.setDisplay('feeds'));
-        router.route(/^invalid/, () => this.setDisplay('invalid'));
-        router.route(/^feed\/([A-Za-z0-9\-]+)/, uuid => this.setDisplay('feed', { id: uuid }));
-        router.route(/^search$/, () => this.setDisplay('search_form'));
-        router.route(/^search\/(.+)/, query => this.setDisplay('search', { query }));
-        router.route(/.*/, () => router.go('unseen'));
-    }
-
-    // Renders the component.
-
-    render() {
-        const display = this.state.display;
-        const displayTypes = {
-            article: ['all', 'important', 'unseen', 'feed', 'search'],
-            invalid: ['invalid'],
-            feeds: ['feeds'],
-            search: ['search_form']
-        };
-        const displayType = Object.keys(displayTypes).find(key => {
-            return displayTypes[key].indexOf(display) >= 0;
-        });
-        return React.createElement(
-            'div',
-            null,
-            React.createElement(Spinner, null),
-            React.createElement(Menu, { menu: this.state.menu, onLogout: this.onLogout, authenticated: this.state.authenticated }),
-            !this.state.authenticated && displayType !== 'search' && React.createElement(Login, { onAuthenticated: this.onAuthenticated }),
-            displayType === 'feeds' && this.state.authenticated && React.createElement(Urls, null),
-            displayType === 'article' && React.createElement(ArticleList, { authenticated: this.state.authenticated, source: this.state.display, args: this.state.args }),
-            displayType === 'invalid' && React.createElement(InvalidList, { authenticated: this.state.authenticated, args: this.state.args }),
-            displayType === 'feeds' && React.createElement(FeedList, { authenticated: this.state.authenticated, args: this.state.args }),
-            displayType === 'search' && React.createElement(Search, { args: this.state.args })
-        );
-    }
-};
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const api = __webpack_require__(0);
+const api = __webpack_require__(3);
 const scroll = __webpack_require__(1);
-const immut = __webpack_require__(7);
-const Article = __webpack_require__(8);
+const immut = __webpack_require__(6);
+const Article = __webpack_require__(7);
 
 const MAX_ROW_ID = 9007199254740991;
 
@@ -689,7 +687,7 @@ module.exports = class ArticleList extends React.Component {
 };
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 // Sets item using the callback. Returns
@@ -707,10 +705,10 @@ exports.modifyItem = (array, index, cb) => {
 };
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Button = __webpack_require__(3);
+const Button = __webpack_require__(8);
 
 module.exports = props => {
     const authenticated = props.authenticated;
@@ -771,6 +769,40 @@ module.exports = props => {
 };
 
 /***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const classlist = __webpack_require__(9);
+
+module.exports = props => {
+    // Helper to set the button CSS classes.
+    const classes = {
+        'btn': true,
+        'btn-small': true,
+        'btn-danger': props.danger,
+        'btn-inverse': props.inverse,
+        'disabled': props.disabled
+    };
+    const href = props.href || '#';
+    // Helper that automatically calls preventDefault
+    // on the DOM event when the callback is set.
+    const preventDefault = cb => {
+        return e => {
+            if (typeof cb === 'function') {
+                e.preventDefault();
+                cb();
+            }
+        };
+    };
+    return React.createElement(
+        'a',
+        { href: href, onClick: preventDefault(props.onClick),
+            className: classlist(classes) },
+        props.children
+    );
+};
+
+/***/ }),
 /* 9 */
 /***/ (function(module, exports) {
 
@@ -784,7 +816,7 @@ module.exports = classes => {
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const api = __webpack_require__(0);
+const api = __webpack_require__(3);
 const scroll = __webpack_require__(1);
 const Invalid = __webpack_require__(11);
 
@@ -886,7 +918,7 @@ module.exports = class InvalidList extends React.Component {
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Button = __webpack_require__(3);
+const Button = __webpack_require__(8);
 
 // Displays one invalid feed list item.
 
@@ -933,7 +965,7 @@ module.exports = props => {
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const api = __webpack_require__(0);
+const api = __webpack_require__(3);
 const scroll = __webpack_require__(1);
 const Feed = __webpack_require__(13);
 
@@ -1040,7 +1072,7 @@ module.exports = class FeedList extends React.Component {
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Button = __webpack_require__(3);
+const Button = __webpack_require__(8);
 
 // Displays one feed list item.
 
@@ -1166,7 +1198,7 @@ module.exports = props => {
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const api = __webpack_require__(0);
+const api = __webpack_require__(3);
 
 // Login form.
 
@@ -1223,7 +1255,7 @@ module.exports = class Login extends React.Component {
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const router = __webpack_require__(2);
+const router = __webpack_require__(4);
 
 // Search form.
 
@@ -1269,7 +1301,7 @@ module.exports = class Search extends React.Component {
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const api = __webpack_require__(0);
+const api = __webpack_require__(3);
 
 // Helper to show/hide the global AJAX spinner.
 
@@ -1299,8 +1331,8 @@ module.exports = class Spinner extends React.Component {
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const api = __webpack_require__(0);
-const router = __webpack_require__(2);
+const api = __webpack_require__(3);
+const router = __webpack_require__(4);
 
 // Form to add new feed URLs.
 

@@ -26,8 +26,13 @@ module.exports = class App extends React.Component {
 
     // Logs out the application.
     
-    onLogout() {
-        this.setState({ authenticated: false });
+    async onLogout() {
+        try {
+            await api.logout();
+            this.setState({ authenticated: false });
+        } catch (err) {
+            alert(`Failed to log out: ${err}.`);
+        }
     }
 
     // Called when user is successfully authenticated.

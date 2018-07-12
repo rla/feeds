@@ -194,4 +194,10 @@ exports.login = async (user, pass) => {
     return (await postJSON('/login', data)).ok;
 };
 
+// Ends the user session.
+
+exports.logout = async () => {
+    return postJSON('/logout');
+};
+
 exports.BATCH = 30;
