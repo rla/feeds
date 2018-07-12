@@ -541,6 +541,9 @@ module.exports = class ArticleList extends React.Component {
     // Deletes the given feed.
 
     async deleteFeed(articleId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         const article = this.state.articles.find(article => article.uuid === articleId);
         if (article && confirm(`Delete the feed ${article.feed_title}?`)) {
             await api.deleteFeed(article.feed);
@@ -555,6 +558,9 @@ module.exports = class ArticleList extends React.Component {
     // Marks the given article as read/unread.
 
     async markRead(articleId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         this.setState(prevState => {
             const index = prevState.articles.findIndex(article => article.uuid === articleId);
             const saveRead = prevState.articles[index].is_read === 1 ? 0 : 1;
@@ -575,6 +581,9 @@ module.exports = class ArticleList extends React.Component {
     // Marks the given article as important.
 
     markImportant(articleId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         this.setState(prevState => {
             const index = prevState.articles.findIndex(article => article.uuid === articleId);
             const saveImportant = prevState.articles[index].is_important === 1 ? 0 : 1;
@@ -595,6 +604,9 @@ module.exports = class ArticleList extends React.Component {
     // Marks the given article and those above it as seen.
 
     markSeen(id) {
+        if (!this.props.authenticated) {
+            return;
+        }
         this.setState(prevState => {
             const articles = prevState.articles;
             const index = articles.findIndex(article => article.uuid === id);
@@ -622,6 +634,11 @@ module.exports = class ArticleList extends React.Component {
     // Read the article. Marks it read.
 
     read(articleId) {
+        if (!this.props.authenticated) {
+            const article = this.state.articles.find(article => article.uuid === articleId);
+            window.open(article.link, '_blank').focus();
+            return;
+        }
         this.setState(prevState => {
             const index = prevState.articles.findIndex(article => article.uuid === articleId);
             window.open(prevState.articles[index].link, '_blank').focus();
@@ -853,6 +870,9 @@ module.exports = class InvalidList extends React.Component {
     // Deletes the given feed.
 
     async deleteFeed(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         const feed = this.state.items.find(item => item.uuid === feedId);
         if (confirm(`Delete the feed ${feed.title}?`)) {
             await api.deleteFeed(feedId);
@@ -864,6 +884,9 @@ module.exports = class InvalidList extends React.Component {
     // Sets the feed non-invalid.
 
     resolveFeed(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         this.setState(prevState => {
             const index = prevState.items.findIndex(item => item.uuid === feedId);
             api.resolveFeed(feedId);
@@ -1004,6 +1027,9 @@ module.exports = class FeedList extends React.Component {
     // Deletes the given feed.
 
     async deleteFeed(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         const feed = this.state.items.find(item => item.uuid === feedId);
         if (confirm(`Delete the feed ${feed.title}?`)) {
             await api.deleteFeed(feedId);
@@ -1015,6 +1041,9 @@ module.exports = class FeedList extends React.Component {
     // Marks all feed articles as seen.
 
     async allSeen(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         await api.seenFeed(feedId);
         // Refresh the current view.
         this.refresh();
@@ -1023,6 +1052,9 @@ module.exports = class FeedList extends React.Component {
     // Marks all feed articles as read.
 
     async allRead(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         await api.readFeed(feedId);
         // Refresh the current view.
         this.refresh();

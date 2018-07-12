@@ -35,6 +35,9 @@ module.exports = class InvalidList extends React.Component {
     // Deletes the given feed.
     
     async deleteFeed(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         const feed = this.state.items.find(
             (item) => item.uuid === feedId);
         if (confirm(`Delete the feed ${feed.title}?`)) {
@@ -47,6 +50,9 @@ module.exports = class InvalidList extends React.Component {
     // Sets the feed non-invalid.
     
     resolveFeed(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         this.setState((prevState) => {
             const index = prevState.items.findIndex(
                 (item) => item.uuid === feedId);

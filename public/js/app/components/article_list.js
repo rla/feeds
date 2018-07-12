@@ -47,6 +47,9 @@ module.exports = class ArticleList extends React.Component {
     // Deletes the given feed.
     
     async deleteFeed(articleId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         const article = this.state.articles.find(
             (article) => article.uuid === articleId);
         if (article && confirm(`Delete the feed ${article.feed_title}?`)) {
@@ -62,6 +65,9 @@ module.exports = class ArticleList extends React.Component {
     // Marks the given article as read/unread.
 
     async markRead(articleId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         this.setState((prevState) => {
             const index = prevState.articles.findIndex(
                 (article) => article.uuid === articleId);
@@ -83,6 +89,9 @@ module.exports = class ArticleList extends React.Component {
     // Marks the given article as important.
 
     markImportant(articleId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         this.setState((prevState) => {
             const index = prevState.articles.findIndex(
                 (article) => article.uuid === articleId);
@@ -104,6 +113,9 @@ module.exports = class ArticleList extends React.Component {
     // Marks the given article and those above it as seen.
 
     markSeen(id) {
+        if (!this.props.authenticated) {
+            return;
+        }
         this.setState((prevState) => {
             const articles = prevState.articles;
             const index = articles.findIndex(
@@ -132,6 +144,12 @@ module.exports = class ArticleList extends React.Component {
     // Read the article. Marks it read.
     
     read(articleId) {
+        if (!this.props.authenticated) {
+            const article = this.state.articles.find(
+                (article) => article.uuid === articleId);
+            window.open(article.link, '_blank').focus();
+            return;
+        }
         this.setState((prevState) => {
             const index = prevState.articles.findIndex(
                 (article) => article.uuid === articleId);

@@ -37,6 +37,9 @@ module.exports = class FeedList extends React.Component {
     // Deletes the given feed.
     
     async deleteFeed(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         const feed = this.state.items.find(
             (item) => item.uuid === feedId);
         if (confirm(`Delete the feed ${feed.title}?`)) {
@@ -49,6 +52,9 @@ module.exports = class FeedList extends React.Component {
     // Marks all feed articles as seen.
 
     async allSeen(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         await api.seenFeed(feedId);
         // Refresh the current view.
         this.refresh();
@@ -57,6 +63,9 @@ module.exports = class FeedList extends React.Component {
     // Marks all feed articles as read.
     
     async allRead(feedId) {
+        if (!this.props.authenticated) {
+            return;
+        }
         await api.readFeed(feedId);
         // Refresh the current view.
         this.refresh();
