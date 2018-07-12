@@ -13,8 +13,8 @@
     "fast-feed": "^1.5.6",
     "morgan": "^1.9.0",
     "node-uuid": "~1.4.1",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
     "request": "^2.87.0",
     "split": "^1.0.1",
     "sqlite3": "^4.0.1"
