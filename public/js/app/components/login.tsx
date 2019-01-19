@@ -1,10 +1,21 @@
-const api = require('../api');
+import React from 'react';
+import * as api from '../api';
 
-// Login form.
+type Props = {
+    onAuthenticated: () => void
+};
 
-module.exports = class Login extends React.Component {
+type State = {
+    user: string,
+    pass: string
+};
 
-    constructor(props) {
+/**
+ * Login form.
+ */
+export default class Login extends React.Component<Props, State> {
+
+    constructor(props: Props) {
         super(props);
         this.state = {
             user: '',
@@ -15,15 +26,15 @@ module.exports = class Login extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleUserChange(e) {
+    handleUserChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ user: e.target.value });
     }
 
-    handlePassChange(e) {
+    handlePassChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ pass: e.target.value });
     }
 
-    handleSubmit(e) {
+    handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         this.login();
     }
@@ -45,4 +56,4 @@ module.exports = class Login extends React.Component {
             </form>
         );
     }
-};
+}

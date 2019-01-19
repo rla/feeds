@@ -2,13 +2,15 @@
 // Not cross-browser.
 // Tested in FF 16, Chrome 2x?, Android 4.x.
 
-const handlers = [];
+type ScrollHandler = () => void;
 
-exports.addHandler = (cb) => {
+const handlers: ScrollHandler[] = [];
+
+export const addHandler = (cb: ScrollHandler) => {
     handlers.push(cb);
 };
 
-exports.removeHandler = (cb) => {
+export const removeHandler = (cb: ScrollHandler) => {
     const index = handlers.indexOf(cb);
     if (index >= 0) {
         handlers.splice(index, 1);
@@ -23,17 +25,17 @@ const callHandlers = () => {
 
 let throttle = false;
 let lastOffset = 0; // used for detecting direction.
-document.addEventListener('scroll', (event) => {
+document.addEventListener('scroll', () => {
     const offset = window.pageYOffset;
     const total = document.body.scrollHeight;
     const win = window.innerHeight;
     const toBotton = offset > lastOffset;
     lastOffset = offset;
-    var atBottom = offset > (total - win - 100);
+    const atBottom = offset > (total - win - 100);
     if (toBotton && atBottom && !throttle) {
         throttle = true;
         callHandlers();
-        setTimeout(function() {
+        setTimeout(() => {
             throttle = false;
         }, 3000);
     }

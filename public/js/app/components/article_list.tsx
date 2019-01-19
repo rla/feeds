@@ -1,16 +1,31 @@
-const api = require('../api');
-const scroll = require('../scroll');
-const immut = require('../immut');
-const Article = require('./article');
+import React from 'react';
+import * as api from '../api';
+import * as scroll from '../scroll';
+import * as immut from '../immut';
+import Article from './article';
 
 const MAX_ROW_ID = 9007199254740991;
+
+type Props = {
+    authenticated: boolean,
+    source: string,
+    args: {
+        id?: string,
+        query?: string
+    }
+};
+
+type State = {
+    articles: api.ArticleData[],
+    rowid: number
+};
 
 // Helper to handle the article list display.
 // Also handles infinite scroll.
 
-module.exports = class ArticleList extends React.Component {
+export default class ArticleList extends React.Component<Props, State> {
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             articles: [],
@@ -20,20 +35,13 @@ module.exports = class ArticleList extends React.Component {
         this.markRead = this.markRead.bind(this);
         this.markImportant = this.markImportant.bind(this);
         this.markSeen = this.markSeen.bind(this);
-        this.read = this.read.bind(this);        
-        this.handlers = {
-            deleteFeed: this.deleteFeed,
-            markRead: this.markRead,
-            markImportant: this.markImportant,
-            markSeen: this.markSeen,
-            read: this.read
-        };
+        this.read = this.read.bind(this);
         this.load = this.load.bind(this);
     }
 
     // Resets state upon props change.
 
-    componentWillReceiveProps(props) {
+    componentWillReceiveProps(props: Props) {
         if (props.source !== this.props.source ||
             props.args !== this.props.args) {
             // Repopulate the view.
@@ -45,8 +53,8 @@ module.exports = class ArticleList extends React.Component {
     }
 
     // Deletes the given feed.
-    
-    async deleteFeed(articleId) {
+
+    async deleteFeed(articleId: string) {
         if (!this.props.authenticated) {
             return;
         }
@@ -64,7 +72,7 @@ module.exports = class ArticleList extends React.Component {
 
     // Marks the given article as read/unread.
 
-    async markRead(articleId) {
+    async markRead(articleId: string) {
         if (!this.props.authenticated) {
             return;
         }
@@ -78,7 +86,7 @@ module.exports = class ArticleList extends React.Component {
             } else {
                 api.markUnread(articleId);
             }
-            return {
+            return { // TODO use immutable.js
                 articles: immut.modifyItem(prevState.articles, index, (article) => {
                     return Object.assign({}, article, { is_read: saveRead });
                 })
@@ -88,7 +96,7 @@ module.exports = class ArticleList extends React.Component {
 
     // Marks the given article as important.
 
-    markImportant(articleId) {
+    markImportant(articleId: string) {
         if (!this.props.authenticated) {
             return;
         }
@@ -102,7 +110,7 @@ module.exports = class ArticleList extends React.Component {
             } else {
                 api.markUnimportant(articleId);
             }
-            return {
+            return { // TODO use immutable.js
                 articles: immut.modifyItem(prevState.articles, index, (article) => {
                     return Object.assign({}, article, { is_important: saveImportant });
                 })
@@ -112,16 +120,16 @@ module.exports = class ArticleList extends React.Component {
 
     // Marks the given article and those above it as seen.
 
-    markSeen(id) {
+    markSeen(articleId: string) {
         if (!this.props.authenticated) {
             return;
         }
         this.setState((prevState) => {
             const articles = prevState.articles;
             const index = articles.findIndex(
-                (article) => article.uuid === id);
+                (article) => article.uuid === articleId);
             const uuids = [];
-            const copy = [];
+            const copy = []; // TODO use immutable.js
             for (let i = 0; i < articles.length; i++) {
                 const article = articles[i];
                 if (i <= index) {
@@ -135,27 +143,37 @@ module.exports = class ArticleList extends React.Component {
                     copy.push(article);
                 }
             }
-            // Launch the API call.
             api.markSeen(uuids);
             return { articles: copy };
         });
     }
 
     // Read the article. Marks it read.
-    
-    read(articleId) {
+
+    read(articleId: string) {
         if (!this.props.authenticated) {
             const article = this.state.articles.find(
                 (article) => article.uuid === articleId);
-            window.open(article.link, '_blank').focus();
+            if (article) {
+                const tab = window.open(article.link, '_blank');
+                if (tab) {
+                    tab.focus();
+                }
+            }
             return;
         }
         this.setState((prevState) => {
             const index = prevState.articles.findIndex(
                 (article) => article.uuid === articleId);
-            window.open(prevState.articles[index].link, '_blank').focus();
+            const article = prevState.articles[index];
+            if (article) {
+                const tab = window.open(article.link, '_blank');
+                if (tab) {
+                    tab.focus();
+                }
+            }
             api.markRead(articleId);
-            return {
+            return { // TODO use immutable.js
                 articles: immut.modifyItem(prevState.articles, index, (article) => {
                     return Object.assign({}, article, { is_read: 1, is_seen: 1 });
                 })
@@ -163,14 +181,13 @@ module.exports = class ArticleList extends React.Component {
         });
     }
 
-    // Loads articles. Updates the displayed list of items.
-
     async load() {
         let source = this.props.source;
         if (source === 'feed') {
             source = `feed/${this.props.args.id}`;
         } else if (source === 'search') {
-            source = `search/${encodeURIComponent(this.props.args.query)}`;
+            const query = this.props.args.query || '';
+            source = `search/${encodeURIComponent(query)}`;
         }
         const articles = await api.articles(source, this.state.rowid, api.BATCH);
         let rowid = this.state.rowid;
@@ -182,8 +199,8 @@ module.exports = class ArticleList extends React.Component {
         this.setState((prevState) => {
             return {
                 articles: prevState.articles.concat(articles),
-                rowid: rowid
-            };            
+                rowid
+            };
         });
     }
 
@@ -208,9 +225,13 @@ module.exports = class ArticleList extends React.Component {
                         item={article}
                         key={article.uuid}
                         authenticated={this.props.authenticated}
-                        handlers={this.handlers}/>;
+                        deleteFeed={this.deleteFeed}
+                        markImportant={this.markImportant}
+                        markRead={this.markRead}
+                        markSeen={this.markSeen}
+                        read={this.read}/>;
                 })}
             </div>
         );
     }
-};
+}

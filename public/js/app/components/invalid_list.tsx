@@ -1,12 +1,24 @@
-const api = require('../api');
-const scroll = require('../scroll');
-const Invalid = require('./invalid');
+import React from 'react';
+import * as api from '../api';
+import * as scroll from '../scroll';
+import Invalid from './invalid';
+import { FeedRow } from '../../../../src/lib/data';
 
-// Helper to handle the invalid feed list display.
+type Props = {
+    authenticated: boolean
+};
 
-module.exports = class InvalidList extends React.Component {
+type State = {
+    items: FeedRow[],
+    start: number
+};
 
-    constructor(props) {
+/**
+ * Helper to handle the invalid feed list display.
+ */
+export default class InvalidList extends React.Component<Props, State> {
+
+    constructor(props: Props) {
         super(props);
         this.state = {
             items: [],
@@ -14,10 +26,6 @@ module.exports = class InvalidList extends React.Component {
         };
         this.deleteFeed = this.deleteFeed.bind(this);
         this.resolveFeed = this.resolveFeed.bind(this);
-        this.handlers = {
-            deleteFeed: this.deleteFeed,
-            resolveFeed: this.resolveFeed
-        };
         this.load = this.load.bind(this);
     }
 
@@ -33,26 +41,29 @@ module.exports = class InvalidList extends React.Component {
     }
 
     // Deletes the given feed.
-    
-    async deleteFeed(feedId) {
+
+    async deleteFeed(feedId: string) {
         if (!this.props.authenticated) {
             return;
         }
         const feed = this.state.items.find(
             (item) => item.uuid === feedId);
-        if (confirm(`Delete the feed ${feed.title}?`)) {
-            await api.deleteFeed(feedId);
-            // Refresh the current view.
-            this.refresh();
+        if (feed) {
+            if (confirm(`Delete the feed ${feed.title}?`)) {
+                await api.deleteFeed(feedId);
+                // Refresh the current view.
+                this.refresh();
+            }
         }
     }
 
     // Sets the feed non-invalid.
-    
-    resolveFeed(feedId) {
+
+    resolveFeed(feedId: string) {
         if (!this.props.authenticated) {
             return;
         }
+        // TODO use immutable.js
         this.setState((prevState) => {
             const index = prevState.items.findIndex(
                 (item) => item.uuid === feedId);
@@ -68,7 +79,7 @@ module.exports = class InvalidList extends React.Component {
 
     async load() {
         const invalid = await api.invalid(this.state.start, api.BATCH);
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 items: prevState.items.concat(invalid),
                 start: prevState.start + Math.min(api.BATCH, invalid.length)
@@ -96,10 +107,11 @@ module.exports = class InvalidList extends React.Component {
                     return <Invalid
                         item={item}
                         key={item.uuid}
-                        authenticated={this.props.authenticated}                        
-                        handlers={this.handlers}/>;
+                        authenticated={this.props.authenticated}
+                        deleteFeed={this.deleteFeed}
+                        resolveFeed={this.resolveFeed}/>;
                 })}
             </div>
         );
     }
-};
+}

@@ -5,14 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
-const morgan_1 = __importDefault(require("morgan"));
 const buster_1 = __importDefault(require("./buster"));
 const cookies_1 = __importDefault(require("./cookies"));
 const session_1 = __importDefault(require("./session"));
 exports.default = (app) => {
-    if (process.env.NODE_ENV !== 'production') {
-        app.use(morgan_1.default('dev'));
-    }
     app.use(buster_1.default());
     let staticOptions = {};
     if (process.env.NODE_ENV === 'production') {

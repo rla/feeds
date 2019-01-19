@@ -14,6 +14,8 @@ export type FeedStatRow = FeedRow & {
     unseen: number
 };
 
+// TODO Convert number to boolean for some properties.
+
 export type ArticleRow = {
     uuid: string,
     feed: string,
@@ -28,7 +30,7 @@ export type ArticleRow = {
 };
 
 export type ArticleFeedRow = ArticleRow & {
-    article_rowid: string,
+    article_rowid: number,
     feed_title: string
 };
 

@@ -1,7 +1,8 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+        "tslint:recommended",
+        "tslint-react"
     ],
     "jsRules": {},
     "rules": {
@@ -12,7 +13,11 @@
         "interface-over-type-literal": false,
         "object-literal-sort-keys": false,
         "no-shadowed-variable": false,
-        "no-any": true
+        "no-any": true,
+        "member-access": false,
+        "jsx-no-multiline-js": false,
+        "jsx-alignment": false,
+        "jsx-no-lambda": false
     },
     "rulesDirectory": []
 }

@@ -8,20 +8,19 @@
         "skipLibCheck": true,
         "moduleResolution": "node",
         "sourceMap": true,
-        "outDir": "dist",
+        "outDir": "../dist",
         "baseUrl": ".",
         "paths": {
             "*": [
-                "node_modules/*",
-                "src/types/*"
+                "../node_modules/*",
+                "types/*"
             ]
         },
         "lib": [
-            "esnext",
-            "dom"
+            "esnext"
         ]
     },
     "include": [
-        "src/**/*"
+        "**/*"
     ]
 }

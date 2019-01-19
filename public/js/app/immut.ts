@@ -1,7 +1,7 @@
 // Sets item using the callback. Returns
 // new array.
 
-exports.modifyItem = (array, index, cb) => {
+export const modifyItem = <T>(array: T[], index: number, cb: (item: T) => T) => {
     const item = array[index];
     if (item) {
         const copy = array.slice(0);

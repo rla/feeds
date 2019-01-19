@@ -9,25 +9,25 @@ export default (app: Application) => {
 
     app.get('/js/react/react.js', (req, res) => {
         const file = path.join(__dirname, '..', '..', '..', 'node_modules',
-            'react', 'dist', 'react.js');
+            'react', 'umd', 'react.development.js');
         res.sendFile(file, { maxAge: MAX_AGE });
     });
 
     app.get('/js/react/react.min.js', (req, res) => {
         const file = path.join(__dirname, '..', '..', '..', 'node_modules',
-            'react', 'dist', 'react.min.js');
+            'react', 'umd', 'react.production.min.js');
         res.sendFile(file, { maxAge: MAX_AGE });
     });
 
     app.get('/js/react/react-dom.js', (req, res) => {
         const file = path.join(__dirname, '..', '..', '..', 'node_modules',
-            'react-dom', 'dist', 'react-dom.js');
+            'react-dom', 'umd', 'react-dom.development.js');
         res.sendFile(file, { maxAge: MAX_AGE });
     });
 
     app.get('/js/react/react-dom.min.js', (req, res) => {
         const file = path.join(__dirname, '..', '..', '..', 'node_modules',
-            'react-dom', 'dist', 'react-dom.min.js');
+            'react-dom', 'umd', 'react-dom.production.min.js');
         res.sendFile(file, { maxAge: MAX_AGE });
     });
 };

@@ -1,12 +1,24 @@
-const api = require('../api');
-const scroll = require('../scroll');
-const Feed = require('./feed');
+import React from 'react';
+import * as api from '../api';
+import * as scroll from '../scroll';
+import Feed from './feed';
+import { FeedStatRow } from '../../../../src/lib/data';
 
-// Helper to handle the feeds list display.
+type Props = {
+    authenticated: boolean
+};
 
-module.exports = class FeedList extends React.Component {
+type State = {
+    items: FeedStatRow[],
+    start: number
+};
 
-    constructor(props) {
+/**
+ * Helper to handle the feeds list display.
+ */
+export default class FeedList extends React.Component<Props, State> {
+
+    constructor(props: Props) {
         super(props);
         this.state = {
             items: [],
@@ -15,11 +27,6 @@ module.exports = class FeedList extends React.Component {
         this.deleteFeed = this.deleteFeed.bind(this);
         this.allSeen = this.allSeen.bind(this);
         this.allRead = this.allRead.bind(this);
-        this.handlers = {
-            deleteFeed: this.deleteFeed,
-            allSeen: this.allSeen,
-            allRead: this.allRead
-        };
         this.load = this.load.bind(this);
     }
 
@@ -35,23 +42,25 @@ module.exports = class FeedList extends React.Component {
     }
 
     // Deletes the given feed.
-    
-    async deleteFeed(feedId) {
+
+    async deleteFeed(feedId: string) {
         if (!this.props.authenticated) {
             return;
         }
         const feed = this.state.items.find(
             (item) => item.uuid === feedId);
-        if (confirm(`Delete the feed ${feed.title}?`)) {
-            await api.deleteFeed(feedId);
-            // Refresh the current view.
-            this.refresh();
-        }        
+        if (feed) {
+            if (confirm(`Delete the feed ${feed.title}?`)) {
+                await api.deleteFeed(feedId);
+                // Refresh the current view.
+                this.refresh();
+            }
+        }
     }
 
     // Marks all feed articles as seen.
 
-    async allSeen(feedId) {
+    async allSeen(feedId: string) {
         if (!this.props.authenticated) {
             return;
         }
@@ -61,8 +70,8 @@ module.exports = class FeedList extends React.Component {
     }
 
     // Marks all feed articles as read.
-    
-    async allRead(feedId) {
+
+    async allRead(feedId: string) {
         if (!this.props.authenticated) {
             return;
         }
@@ -103,10 +112,12 @@ module.exports = class FeedList extends React.Component {
                     return <Feed
                         item={item}
                         key={item.uuid}
-                        authenticated={this.props.authenticated}                        
-                        handlers={this.handlers}/>;
+                        authenticated={this.props.authenticated}
+                        allRead={this.allRead}
+                        allSeen={this.allSeen}
+                        deleteFeed={this.deleteFeed}/>;
                 })}
             </div>
         );
     }
-};
+}

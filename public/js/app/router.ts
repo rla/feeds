@@ -1,27 +1,28 @@
-const routes = [];
+type RouteCallback = (...params: string[]) => void;
+
+type Route = {
+    regexp: RegExp,
+    cb: RouteCallback
+};
+
+const routes: Route[] = [];
 
 // Sets up a route.
 
-exports.route = (regexp, cb) => {
-    if (!(regexp instanceof RegExp)) {
-        throw new Error('Route must be a regexp.');
-    }
-    if (typeof cb !== 'function') {
-        throw new Error('Route handler must be a function.');
-    }
-    routes.push({ regexp: regexp, cb: cb });
+export const route = (regexp: RegExp, cb: RouteCallback) => {
+    routes.push({ regexp, cb });
 };
 
 // Programmatically go a page.
 // Supports extra arguments.
 
-exports.go = (page, ...extra) => {
+export const go = (page: string, ...extra: string[]) => {
     window.location.hash = `#${page}${(extra.length > 0 ? '/' + extra.join('/') : '')}`;
 };
 
 // Re-dispatches the current route.
 
-exports.refresh = () => {
+export const refresh = () => {
     activate();
 };
 
@@ -40,5 +41,5 @@ const activate = () => {
 
 // Sets up hash change and initial callbacks.
 
-window.addEventListener('load', activate, false);    
+window.addEventListener('load', activate, false);
 window.addEventListener('hashchange', activate, false);

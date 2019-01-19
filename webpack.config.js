@@ -1,7 +1,7 @@
 const path = require('path');
 
 const config = {
-    entry: path.join(__dirname, 'public', 'js', 'app', 'index.js'),
+    entry: path.join(__dirname, 'public', 'js', 'app', 'index.tsx'),
     output: {
         path: path.resolve(__dirname, 'public', 'js'),
         filename: 'app.bundle.js'
@@ -11,8 +11,19 @@ const config = {
             {
                 test: /\.js$/,
                 use: 'babel-loader'
+            },
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader'
             }
         ]
+    },
+    externals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM'
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.json']
     }
 };
 

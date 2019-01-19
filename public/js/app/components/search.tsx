@@ -1,26 +1,36 @@
-const router = require('../router');
+import React from 'react';
+import * as router from '../router';
 
-// Search form.
+type Props = {
+    query: string
+};
 
-module.exports = class Search extends React.Component {
+type State = {
+    query: string
+};
 
-    constructor(props) {
+/**
+ * Search form.
+ */
+export default class Search extends React.Component<Props, State> {
+
+    constructor(props: Props) {
         super(props);
-        this.state = { query: props.args.query };
+        this.state = { query: props.query };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     // Handles the term input change.
-    
-    handleChange(e) {
+
+    handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ query: e.target.value });
     }
 
     // Handles the submission of the search form. Directs
     // the router to the search results page.
 
-    handleSubmit(e) {
+    handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         router.go('search', encodeURIComponent(this.state.query));
     }
@@ -34,4 +44,4 @@ module.exports = class Search extends React.Component {
             </form>
         );
     }
-};
+}
