@@ -20,7 +20,10 @@ const config = {
     },
     externals: {
         'react': 'React',
-        'react-dom': 'ReactDOM'
+        'react-dom': 'ReactDOM',
+        'redux': 'Redux',
+        'react-redux': 'ReactRedux',
+        'redux-thunk': 'ReduxThunk'
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json']

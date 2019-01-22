@@ -11,7 +11,7 @@
             if (!asyncFunctions) { window.location.href = '/old'; }
         </script>
         <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">        
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
         <style>
             body {
                 padding: 1em;
@@ -40,13 +40,7 @@
     </head>
     <body>
         <div id="root"></div>
-        <% if (production) { %>
-            <script src="/v-<%= version %>/js/react/react.min.js"></script>
-            <script src="/v-<%= version %>/js/react/react-dom.min.js"></script>
-        <% } else { %>
-            <script src="/v-<%= version %>/js/react/react.js"></script>
-            <script src="/v-<%= version %>/js/react/react-dom.js"></script>
-        <% } %>
+        <script src="/v-<%= version %>/js/libs.production.js"></script>
         <script src="/v-<%= version %>/js/app.bundle.js"></script>
     </body>
 </html>
