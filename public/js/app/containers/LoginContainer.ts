@@ -3,7 +3,6 @@ import { FeedsState } from '../store';
 import { setUser, setPass, submit } from '../actions/login';
 import Login from '../components/Login';
 import { ThunkDispatch } from '../actions/thunk';
-import { ChangeEvent, FormEvent } from 'react';
 
 const mapStateToProps = (state: FeedsState) => ({
     user: state.login.user,
@@ -11,9 +10,9 @@ const mapStateToProps = (state: FeedsState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-    setUser: (e: ChangeEvent<HTMLInputElement>) => dispatch(setUser(e)),
-    setPass: (e: ChangeEvent<HTMLInputElement>) => dispatch(setPass(e)),
-    submit: (e: FormEvent) => dispatch(submit(e))
+    setUser: (user: string) => dispatch(setUser(user)),
+    setPass: (pass: string) => dispatch(setPass(pass)),
+    submit: () => dispatch(submit())
 });
 
 /**

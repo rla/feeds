@@ -3,15 +3,14 @@ import { FeedsState } from '../store';
 import { setText, submit } from '../actions/urls';
 import Urls from '../components/Urls';
 import { ThunkDispatch } from '../actions/thunk';
-import { ChangeEvent, FormEvent } from 'react';
 
 const mapStateToProps = (state: FeedsState) => ({
     text: state.urls.text
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-    setText: (e: ChangeEvent<HTMLTextAreaElement>) => dispatch(setText(e)),
-    submit: (e: FormEvent) => dispatch(submit(e))
+    setText: (text: string) => dispatch(setText(text)),
+    submit: () => dispatch(submit())
 });
 
 /**

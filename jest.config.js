@@ -20,5 +20,5 @@ module.exports = {
         }
     },
     snapshotSerializers: ['enzyme-to-json/serializer'],
-    setupTestFrameworkScriptFile: './public/js/app/setupTests.ts'
+    setupTestFrameworkScriptFile: './public/js/app/testing/setupTests.ts'
 };

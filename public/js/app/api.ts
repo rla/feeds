@@ -78,6 +78,7 @@ const requestFetch = async (url: string, options?: RequestInit) => {
         return json.data as {};
     } catch (err) {
         handleError(err);
+        return {};
     } finally {
         endRequest();
     }
@@ -125,7 +126,7 @@ const putJSON = async (url: string, data?: {}) => {
  * Helper to run a delete request.
  */
 const deleteRequest = async (url: string) => {
-    return requestFetch(url,
+    await requestFetch(url,
         { method: 'DELETE', credentials: 'include' });
 };
 
@@ -168,63 +169,63 @@ export const deleteFeed = async (feedId: string) => {
  * Marks the article as read.
  */
 export const markRead = async (articleId: string) => {
-    return putJSON(`/article/${articleId}/read`);
+    await putJSON(`/article/${articleId}/read`);
 };
 
 /**
  * Marks the article as unread.
  */
 export const markUnread = async (articleId: string) => {
-    return putJSON(`/article/${articleId}/unread`);
+    await putJSON(`/article/${articleId}/unread`);
 };
 
 /**
  * Marks the article as important.
  */
 export const markImportant = async (articleId: string) => {
-    return putJSON(`/article/${articleId}/important`);
+    await putJSON(`/article/${articleId}/important`);
 };
 
 /**
  * Marks the article as unimportant.
  */
 export const markUnimportant = async (articleId: string) => {
-    return putJSON(`/article/${articleId}/unimportant`);
+    await putJSON(`/article/${articleId}/unimportant`);
 };
 
 /**
  * Marks all given articles as seen.
  */
 export const markSeen = async (articleIds: string[]) => {
-    return putJSON('/seen', articleIds);
+    await putJSON('/seen', articleIds);
 };
 
 /**
  * Marks all articles in the feed as seen.
  */
 export const seenFeed = async (feedId: string) => {
-    return putJSON(`/feed/${feedId}/seen`);
+    await putJSON(`/feed/${feedId}/seen`);
 };
 
 /**
  * Marks all articles in the feed as read.
  */
 export const readFeed = async (feedId: string) => {
-    return putJSON(`/feed/${feedId}/read`);
+    await putJSON(`/feed/${feedId}/read`);
 };
 
 /**
  * Removes errors from the feed.
  */
 export const resolveFeed = async (feedId: string) => {
-    return putJSON(`/feed/${feedId}/resolve`);
+    await putJSON(`/feed/${feedId}/resolve`);
 };
 
 /**
  * Adds given feed URLs.
  */
 export const addUrls = async (urls: string[]) => {
-    return postJSON('/urls', urls);
+    await postJSON('/urls', urls);
 };
 
 /**
@@ -239,7 +240,49 @@ export const login = async (user: string, pass: string) => {
  * Ends the user session.
  */
 export const logout = async () => {
-    return postJSON('/logout');
+    await postJSON('/logout');
 };
 
+// TODO: refactor out.
 export const BATCH = 30;
+
+/**
+ * Type for the API. Used for creating a typesafe mock for testing.
+ */
+export type Api = {
+    articles: (source: string, rowid: number, batch: number) => Promise<ArticleData[]>,
+    invalid: (start: number, batch: number) => Promise<FeedRow[]>,
+    feeds: (start: number, batch: number) => Promise<FeedStatRow[]>,
+    deleteFeed: (feedId: string) => Promise<void>,
+    markRead: (articleId: string) => Promise<void>,
+    markUnread: (articleId: string) => Promise<void>,
+    markImportant: (articleId: string) => Promise<void>,
+    markUnimportant: (articleId: string) => Promise<void>,
+    markSeen: (articleIds: string[]) => Promise<void>,
+    seenFeed: (feedId: string) => Promise<void>,
+    readFeed: (feedId: string) => Promise<void>,
+    resolveFeed: (feedId: string) => Promise<void>,
+    addUrls: (urls: string[]) => Promise<void>,
+    login: (user: string, pass: string) => Promise<boolean>,
+    logout: () => Promise<void>,
+    BATCH: number
+};
+
+export const api: Api = {
+    articles,
+    invalid,
+    feeds,
+    deleteFeed,
+    markRead,
+    markUnread,
+    markImportant,
+    markUnimportant,
+    markSeen,
+    seenFeed,
+    readFeed,
+    resolveFeed,
+    addUrls,
+    login,
+    logout,
+    BATCH
+};

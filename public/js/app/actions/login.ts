@@ -1,4 +1,3 @@
-import { ChangeEvent, FormEvent } from 'react';
 import { login } from './auth';
 import { ThunkDispatch } from './thunk';
 
@@ -17,15 +16,14 @@ export type LoginSetPassword = {
 
 export type LoginAction = LoginSetUsername | LoginSetPassword;
 
-export const submit = (e: FormEvent) => {
-    e.preventDefault();
-    return (dispatch: ThunkDispatch) => {
-        dispatch(login());
+export const submit = () => {
+    return async (dispatch: ThunkDispatch) => {
+        await dispatch(login());
     };
 };
 
-export const setUser = (e: ChangeEvent<HTMLInputElement>) =>
-    ({ type: LOGIN_SET_USERNAME, user: e.target.value });
+export const setUser = (user: string) =>
+    ({ type: LOGIN_SET_USERNAME, user });
 
-export const setPass = (e: ChangeEvent<HTMLInputElement>) =>
-    ({ type: LOGIN_SET_PASSWORD, pass: e.target.value });
+export const setPass = (pass: string) =>
+    ({ type: LOGIN_SET_PASSWORD, pass });

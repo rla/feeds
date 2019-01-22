@@ -1,7 +1,8 @@
 import { AnyAction } from 'redux';
 import { FeedsState } from '../store';
+import { Api } from '../api';
 
-type ThunkAction = (dispatch: ThunkDispatch, getState: () => FeedsState) => void;
+type ThunkAction = (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => void;
 
 type ActionDispatch = (action: AnyAction) => void;
 

@@ -1,7 +1,7 @@
 import { ArticleSource } from '../reducers/articles';
 import { FeedsState } from '../store';
 import { ThunkDispatch } from './thunk';
-import * as api from '../api';
+import { Api, ArticleData } from '../api';
 
 export const ARTICLES_LOADED = 'ARTICLES_LOADED';
 export const ARTICLES_INITIAL = 'ARTICLES_INITIAL';
@@ -12,7 +12,7 @@ export const ARTICLES_MARK_SEEN = 'ARTICLES_MARK_SEEN';
 
 export type ArticlesLoaded = {
     type: typeof ARTICLES_LOADED,
-    articles: api.ArticleData[]
+    articles: ArticleData[]
 };
 
 export type ArticlesInitial = {
@@ -52,9 +52,9 @@ export type ArticlesAction =
  * Loads articles from the backend.
  */
 export const loadInitial = (source: ArticleSource) => {
-    return (dispatch: ThunkDispatch) => {
-        dispatch(initial(source));
-        dispatch(load());
+    return async (dispatch: ThunkDispatch) => {
+        await dispatch(initial(source));
+        await dispatch(load());
     };
 };
 
@@ -62,14 +62,14 @@ export const loadInitial = (source: ArticleSource) => {
  * Loads articles from the backend. Can be called multiple times.
  */
 export const load = () => {
-    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         const state = getState();
         const source = state.articles.source;
         if (source === 'search') {
             if (state.search.query !== '') {
                 const fullSource = `search/${encodeURIComponent(state.search.query)}`;
                 const articles = await api.articles(fullSource, state.articles.rowid, api.BATCH);
-                dispatch(loaded(articles));
+                await dispatch(loaded(articles));
             }
         } else if (source === 'feed') {
             const args = state.route.args;
@@ -78,12 +78,12 @@ export const load = () => {
                 if (feedId) {
                     const fullSource = `feed/${feedId}`;
                     const articles = await api.articles(fullSource, state.articles.rowid, api.BATCH);
-                    dispatch(loaded(articles));
+                    await dispatch(loaded(articles));
                 }
             }
         } else {
             const articles = await api.articles(source, state.articles.rowid, api.BATCH);
-            dispatch(loaded(articles));
+            await dispatch(loaded(articles));
         }
     };
 };
@@ -93,12 +93,12 @@ export const load = () => {
  * Reloads the given view.
  */
 export const deleteFeed = (articleId: string) => {
-    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         const state = getState();
         const article = state.articles.items.find((article) => article.uuid === articleId);
         if (article) {
             await api.deleteFeed(article.feed);
-            dispatch(loadInitial(state.articles.source));
+            await dispatch(loadInitial(state.articles.source));
         }
     };
 };
@@ -107,8 +107,8 @@ export const deleteFeed = (articleId: string) => {
  * Toggles the read status of the article.
  */
 export const markRead = (articleId: string) => {
-    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
-        dispatch({ type: ARTICLES_TOGGLE_READ, articleId });
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
+        await dispatch({ type: ARTICLES_TOGGLE_READ, articleId });
         const article = getState().articles.items.find((article) => article.uuid === articleId);
         if (article) {
             if (article.is_read) {
@@ -124,8 +124,8 @@ export const markRead = (articleId: string) => {
  * Toggles the important status of the article.
  */
 export const markImportant = (articleId: string) => {
-    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
-        dispatch({ type: ARTICLES_TOGGLE_IMPORTANT, articleId });
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
+        await dispatch({ type: ARTICLES_TOGGLE_IMPORTANT, articleId });
         const article = getState().articles.items.find((article) => article.uuid === articleId);
         if (article) {
             if (article.is_important) {
@@ -142,14 +142,14 @@ export const markImportant = (articleId: string) => {
  * it (on the view list) as seen.
  */
 export const markSeen = (articleId: string) => {
-    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         const state = getState();
         const index = state.articles.items.findIndex((article) => article.uuid === articleId);
         if (index >= 0) {
             const markSet = state.articles.items.slice(0, index + 1)
                 .filter((article) => article.is_seen === 0)
                 .map((article) => article.uuid);
-            dispatch({ type: ARTICLES_MARK_SEEN, articleId });
+            await dispatch({ type: ARTICLES_MARK_SEEN, articleId });
             await api.markSeen(markSet);
         }
     };
@@ -159,22 +159,15 @@ export const markSeen = (articleId: string) => {
  * Opens the article in new tab. Marks the read status.
  */
 export const read = (articleId: string) => {
-    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
-        dispatch({ type: ARTICLES_MARK_READ, articleId });
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
+        await dispatch({ type: ARTICLES_MARK_READ, articleId });
         const state = getState();
-        const article = state.articles.items.find((article) => article.uuid === articleId);
-        if (article) {
-            const tab = window.open(article.link, '_blank');
-            if (tab) {
-                tab.focus();
-            }
-            if (state.auth.authenticated) {
-                await api.markRead(articleId);
-            }
+        if (state.auth.authenticated) {
+            await api.markRead(articleId);
         }
     };
 };
 
 const initial = (source: ArticleSource) => ({ type: ARTICLES_INITIAL, source });
 
-const loaded = (articles: api.ArticleData[]) => ({ type: ARTICLES_LOADED, articles });
+const loaded = (articles: ArticleData[]) => ({ type: ARTICLES_LOADED, articles });

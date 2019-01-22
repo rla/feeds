@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import reducers from './reducers';
+import { api } from './api';
 import { InvalidFeedsState } from './reducers/invalid';
 import { RouteState } from './reducers/route';
 import { SpinnerState } from './reducers/spinner';
@@ -28,5 +29,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 
 /**
  * State store for the Feeds application.
+ * The API interface is passed as a separate
+ * argument for thunk-based actions.
  */
-export default createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
+export default createStore(reducers, composeEnhancers(applyMiddleware(thunk.withExtraArgument(api))));

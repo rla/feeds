@@ -57,6 +57,13 @@ Frontend:
  * Compiled and bundled through Webpack.
    - Separated external libraries.
 
+### Code style
+
+Source code style is checked by [TSLint][tslint] with minimal
+customization of the default rules.
+
+[tslint]: https://palantir.github.io/tslint/
+
 ### Testing
 
 Testing for frontend is implemented using [jest][jest].
@@ -69,6 +76,10 @@ npm run test-frontend
 
 What is tested?
 
+ * Redux reducers. It is checked that the state is correctly
+   transformed according to the dispatched actions.
+ * Redux actions including async actions. Api is mocked and
+   actions are checked to create correct actions.
  * Shallow rendering of React components to catch potential crashes.
  * More cases can be easily added to the existing tests.
 

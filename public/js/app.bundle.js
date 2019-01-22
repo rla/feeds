@@ -3420,12 +3420,57 @@ const initial = () => ({ type: exports.INVALID_INITIAL });
 
 /***/ }),
 /* 43 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/ts-loader/index.js):\nError: ENOENT: no such file or directory, open '/home/raivo/feeds/public/js/app/components/InvalidList.tsx'");
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(1));
+const Invalid_1 = __importDefault(__webpack_require__(44));
+/**
+ * Helper to handle the invalid feed list display.
+ */
+exports.default = (props) => {
+    return (react_1.default.createElement("div", null, props.items.map((item) => {
+        return react_1.default.createElement(Invalid_1.default, { item: item, key: item.uuid, authenticated: props.authenticated, deleteFeed: props.deleteFeed, resolveFeed: props.resolveFeed });
+    })));
+};
+
 
 /***/ }),
-/* 44 */,
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(1));
+const Button_1 = __importDefault(__webpack_require__(45));
+/**
+ * Displays one invalid feed list item.
+ */
+exports.default = (props) => {
+    const authenticated = props.authenticated;
+    const item = props.item;
+    return (react_1.default.createElement("div", { className: 'well well-small' },
+        react_1.default.createElement("strong", null, item.title),
+        react_1.default.createElement("br", null),
+        "Error: ",
+        item.error,
+        react_1.default.createElement("div", { className: 'buttons' },
+            react_1.default.createElement(Button_1.default, { disabled: !authenticated, onClick: () => props.deleteFeed(item.uuid) }, "Delete"),
+            react_1.default.createElement(Button_1.default, { disabled: !authenticated, onClick: () => props.resolveFeed(item.uuid) }, "Resolve"),
+            react_1.default.createElement(Button_1.default, { href: `#feed/${item.uuid}` }, "View"))));
+};
+
+
+/***/ }),
 /* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4250,16 +4295,24 @@ exports.default = (props) => {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const redux_1 = __webpack_require__(23);
 const redux_thunk_1 = __importDefault(__webpack_require__(68));
 const reducers_1 = __importDefault(__webpack_require__(69));
+const api = __importStar(__webpack_require__(39));
 // tslint:disable-next-line:no-any
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || redux_1.compose;
 /**
  * State store for the Feeds application.
  */
-exports.default = redux_1.createStore(reducers_1.default, composeEnhancers(redux_1.applyMiddleware(redux_thunk_1.default)));
+exports.default = redux_1.createStore(reducers_1.default, composeEnhancers(redux_1.applyMiddleware(redux_thunk_1.default.withExtraArgument(api))));
 
 
 /***/ }),

@@ -1,5 +1,5 @@
 import { FeedStatRow } from '../../../../src/lib/data';
-import * as api from '../api';
+import { Api } from '../api';
 import { FeedsState } from '../store';
 import { ThunkDispatch } from './thunk';
 
@@ -44,9 +44,9 @@ export type FeedsAction =
  * Loads feeds from the backend.
  */
 export const loadInitial = () => {
-    return (dispatch: ThunkDispatch) => {
-        dispatch(initial());
-        dispatch(load());
+    return async (dispatch: ThunkDispatch) => {
+        await dispatch(initial());
+        await dispatch(load());
     };
 };
 
@@ -54,10 +54,10 @@ export const loadInitial = () => {
  * Loads feeds from the backend. Can be called multiple times.
  */
 export const load = () => {
-    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         const state = getState();
         const feeds = await api.feeds(state.feeds.start, api.BATCH);
-        dispatch(loaded(feeds));
+        await dispatch(loaded(feeds));
     };
 };
 
@@ -65,9 +65,9 @@ export const load = () => {
  * Deletes the given feed.
  */
 export const deleteFeed = (feedId: string) => {
-    return async (dispatch: ThunkDispatch) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         await api.deleteFeed(feedId);
-        dispatch(feedDeleted(feedId));
+        await dispatch(feedDeleted(feedId));
     };
 };
 
@@ -75,9 +75,9 @@ export const deleteFeed = (feedId: string) => {
  * Marks whole feed to be seen.
  */
 export const markSeen = (feedId: string) => {
-    return async (dispatch: ThunkDispatch) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         await api.seenFeed(feedId);
-        dispatch(feedMarkedSeen(feedId));
+        await dispatch(feedMarkedSeen(feedId));
     };
 };
 
@@ -85,9 +85,9 @@ export const markSeen = (feedId: string) => {
  * Marks whole feed to be read.
  */
 export const markRead = (feedId: string) => {
-    return async (dispatch: ThunkDispatch) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         await api.readFeed(feedId);
-        dispatch(feedMarkedRead(feedId));
+        await dispatch(feedMarkedRead(feedId));
     };
 };
 

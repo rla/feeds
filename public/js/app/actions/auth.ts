@@ -1,6 +1,6 @@
 import { ThunkDispatch } from './thunk';
 import { FeedsState } from '../store';
-import * as api from '../api';
+import { Api } from '../api';
 
 export const AUTH_SUCCESSFUL = 'AUTH_SUCCESSFUL';
 export const AUTH_LOGGED_OUT = 'AUTH_LOGGED_OUT';
@@ -16,19 +16,19 @@ export type AuthLoggedOut = {
 export type AuthAction = AuthSuccessful | AuthLoggedOut;
 
 export const login = () => {
-    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         const state = getState();
         const result = await api.login(state.login.user, state.login.pass);
         if (result) {
-            dispatch(authSuccessful());
+            await dispatch(authSuccessful());
         }
     };
 };
 
 export const logout = () => {
-    return async (dispatch: ThunkDispatch) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         await api.logout();
-        dispatch(authLoggedOut());
+        await dispatch(authLoggedOut());
     };
 };
 

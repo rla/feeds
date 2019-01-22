@@ -1,4 +1,3 @@
-import { ChangeEvent, FormEvent } from 'react';
 import { ThunkDispatch } from './thunk';
 import { routeView } from './route';
 
@@ -15,12 +14,11 @@ export type SearchAction = SearchSetQuery;
  * Submits the search form. Dispatches action to
  * show the search result view.
  */
-export const submit = (e: FormEvent) => {
-    e.preventDefault();
-    return (dispatch: ThunkDispatch) => {
-        dispatch(routeView('results'));
+export const submit = () => {
+    return async (dispatch: ThunkDispatch) => {
+        await dispatch(routeView('results'));
     };
 };
 
-export const setQuery = (e: ChangeEvent<HTMLInputElement>) =>
-    ({ type: SEARCH_SET_QUERY, query: e.target.value });
+export const setQuery = (query: string) =>
+    ({ type: SEARCH_SET_QUERY, query });

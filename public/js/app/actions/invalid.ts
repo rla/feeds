@@ -1,5 +1,5 @@
 import { FeedRow } from '../../../../src/lib/data';
-import * as api from '../api';
+import { Api } from '../api';
 import { FeedsState } from '../store';
 import { ThunkDispatch } from './thunk';
 
@@ -26,15 +26,13 @@ export type InvalidAction =
     InvalidFeedResolved |
     InvalidInitial;
 
-// TODO dispatch error.
-
 /**
  * Loads invalid feeds from the backend. Can be called multiple times.
  */
 export const loadInitial = () => {
-    return (dispatch: ThunkDispatch) => {
-        dispatch(initial());
-        dispatch(load());
+    return async (dispatch: ThunkDispatch) => {
+        await dispatch(initial());
+        await dispatch(load());
     };
 };
 
@@ -42,10 +40,10 @@ export const loadInitial = () => {
  * Loads invalid feeds from the backend. Can be called multiple times.
  */
 export const load = () => {
-    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         const state = getState();
         const feeds = await api.invalid(state.invalid.start, api.BATCH);
-        dispatch(loaded(feeds));
+        await dispatch(loaded(feeds));
     };
 };
 
@@ -53,9 +51,9 @@ export const load = () => {
  * Deletes the given feed. Reloads the view.
  */
 export const deleteFeed = (feedId: string) => {
-    return async (dispatch: ThunkDispatch) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         await api.deleteFeed(feedId);
-        dispatch(loadInitial());
+        await dispatch(loadInitial());
     };
 };
 
@@ -63,9 +61,9 @@ export const deleteFeed = (feedId: string) => {
  * Resolves the given feed.
  */
 export const resolveFeed = (feedId: string) => {
-    return async (dispatch: ThunkDispatch) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
         await api.resolveFeed(feedId);
-        dispatch(feedResolved(feedId));
+        await dispatch(feedResolved(feedId));
     };
 };
 

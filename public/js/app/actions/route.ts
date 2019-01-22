@@ -17,34 +17,20 @@ export type RouteAction = {
  * Routes to the given view.
  */
 export const routeView = (view: View, args?: string[]) => {
-    return (dispatch: ThunkDispatch) => {
+    return async (dispatch: ThunkDispatch) => {
         dispatch({ type: ROUTE_VIEW, view, args });
         if (view === 'invalid') {
-            dispatch(invalid.loadInitial());
+            await dispatch(invalid.loadInitial());
         } else if (view === 'feeds') {
-            dispatch(feeds.loadInitial());
+            await dispatch(feeds.loadInitial());
         } else if (view === 'results') {
-            dispatch(articles.loadInitial('search'));
+            await dispatch(articles.loadInitial('search'));
         } else if (view === 'feed') {
-            dispatch(articles.loadInitial('feed'));
+            await dispatch(articles.loadInitial('feed'));
         } else if (view === 'unseen') {
-            dispatch(articles.loadInitial('unseen'));
+            await dispatch(articles.loadInitial('unseen'));
         } else if (view === 'important') {
-            dispatch(articles.loadInitial('important'));
-        }
-    };
-};
-
-/**
- * Refreshes the current view.
- */
-export const routeRefresh = () => {
-    return (dispatch: ThunkDispatch, getState: () => FeedsState) => {
-        const state = getState();
-        const view = state.route.view;
-        const args = state.route.args;
-        if (view !== null) {
-            dispatch(routeView(view, args));
+            await dispatch(articles.loadInitial('important'));
         }
     };
 };
@@ -54,20 +40,20 @@ export const routeRefresh = () => {
  * All views load more items through infinite scroll.
  */
 export const routeScroll = () => {
-    return (dispatch: ThunkDispatch, getState: () => FeedsState) => {
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
         const state = getState();
         if (state.route.view === 'invalid') {
-            dispatch(invalid.load());
+            await dispatch(invalid.load());
         } else if (state.route.view === 'feeds') {
-            dispatch(feeds.load());
+            await dispatch(feeds.load());
         } else if (state.route.view === 'results') {
-            dispatch(articles.load());
+            await dispatch(articles.load());
         } else if (state.route.view === 'feed') {
-            dispatch(articles.load());
+            await dispatch(articles.load());
         } else if (state.route.view === 'unseen') {
-            dispatch(articles.load());
+            await dispatch(articles.load());
         } else if (state.route.view === 'important') {
-            dispatch(articles.load());
+            await dispatch(articles.load());
         }
     };
 };

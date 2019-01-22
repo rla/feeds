@@ -12,14 +12,6 @@ type Props = {
     read: (articleId: string) => void
 };
 
-const deleteFeed = (article: ArticleData, props: Props) => {
-    if (props.authenticated) {
-        if (confirm(`Delete the feed ${article.feed_title}?`)) {
-            props.deleteFeed(article.uuid);
-        }
-    }
-};
-
 /**
  * Displays single article in a list view of the articles.
  */
@@ -27,13 +19,27 @@ export default (props: Props) => {
     const authenticated = props.authenticated;
     const item = props.item;
     const dateString = item.date.toISOString().substring(0, 10);
+    const deleteFeed = () => {
+        if (props.authenticated) {
+            if (confirm(`Delete the feed ${props.item.feed_title}?`)) {
+                props.deleteFeed(props.item.uuid);
+            }
+        }
+    };
+    const read = () => {
+        props.read(props.item.uuid);
+        const tab = window.open(props.item.link, '_blank');
+        if (tab) {
+            tab.focus();
+        }
+    };
     return (
         <div className='well well-small'>
             <strong>{item.title}</strong><br/>
             Published {dateString} in <a href={`#feed/${item.feed}`}>{item.feed_title}</a>
             <div className='buttons'>
                 <Button disabled={!authenticated}
-                    onClick={() => deleteFeed(item, props)}>Delete feed</Button>
+                    onClick={deleteFeed}>Delete feed</Button>
                 <Button disabled={!authenticated} inverse={!!item.is_read}
                     onClick={() => props.markRead(item.uuid)}>Mark read</Button>
                 <Button disabled={!authenticated} danger={!!item.is_important}
@@ -41,7 +47,7 @@ export default (props: Props) => {
                 <Button disabled={!authenticated} inverse={!!item.is_seen}
                     onClick={() => props.markSeen(item.uuid)}>Seen</Button>
                 <Button inverse={!!item.is_read}
-                    onClick={() => props.read(item.uuid)}>Read</Button>
+                    onClick={read}>Read</Button>
             </div>
         </div>
     );
