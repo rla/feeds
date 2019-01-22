@@ -29,16 +29,48 @@ My live app is running at [http://feeds.rlaanemets.com/](http://feeds.rlaanemets
 
 ## Importing feed addresses
 
-Log into the app and obtain the auth token from `/token`.
+Use the textarea on top of the "Feeds" list to enter a list of urls.
+Invalid urls and feeds will later be shown under "Invalid".
 
-Then do a POST request to `/import` with a list of URLs. Example with curl:
+## Technology
 
-    curl -X POST --data-binary @list.txt \
-        http://localhost:3330/import?auth=ctmzgmjaxbasklhntwvh \
-        --header 'Content-Type: text/plain'
+The project has become my personal playground to test various frontent (mostly) libraries.
+The whole project is type-checked and compiled by TypeScript. This has made it easier to
+refactor although it causes some friction with libraries that have no types available or
+are very dynamic to have useful types.
 
-Where `list.txt` is the file containing URLs and `ctmzgmjaxbasklhntwvh` is your auth token obtained in
-the previous step.
+### Architecture
+
+Backend:
+
+ * SQLite database.
+   - Uses package `node-sqlite` for Promise-based access.
+   - Custom transaction manager in `src/lib/db`.
+
+Frontend:
+
+ * React view library.
+ * Redux state store.
+   - Uses package `redux-thunk` for async actions.
+   - Typesafe actions, reducers, and state with TypeScript.
+ * Typesafe REST API with shared types between frontend and backend.
+ * Compiled and bundled through Webpack.
+   - Separated external libraries.
+
+### Testing
+
+Testing for frontend is implemented using [jest][jest].
+
+Running frontend tests:
+
+```sh
+npm run test-frontend
+```
+
+What is tested?
+
+ * Shallow rendering of React components to catch potential crashes.
+ * More cases can be easily added to the existing tests.
 
 ## Changelog
 
@@ -63,7 +95,7 @@ App's favicon is from [favicon.cc](http://www.favicon.cc/?action=icon&file_id=36
 The MIT License.
 
 ```
-Copyright (c) 2013-2017 Raivo Laanemets
+Copyright (c) 2013-2019 Raivo Laanemets
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

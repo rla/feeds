@@ -3420,57 +3420,12 @@ const initial = () => ({ type: exports.INVALID_INITIAL });
 
 /***/ }),
 /* 43 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(1));
-const Invalid_1 = __importDefault(__webpack_require__(44));
-/**
- * Helper to handle the invalid feed list display.
- */
-exports.default = (props) => {
-    return (react_1.default.createElement("div", null, props.items.map((item) => {
-        return react_1.default.createElement(Invalid_1.default, { item: item, key: item.uuid, authenticated: props.authenticated, deleteFeed: props.deleteFeed, resolveFeed: props.resolveFeed });
-    })));
-};
-
+throw new Error("Module build failed (from ./node_modules/ts-loader/index.js):\nError: ENOENT: no such file or directory, open '/home/raivo/feeds/public/js/app/components/InvalidList.tsx'");
 
 /***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(1));
-const Button_1 = __importDefault(__webpack_require__(45));
-/**
- * Displays one invalid feed list item.
- */
-exports.default = (props) => {
-    const authenticated = props.authenticated;
-    const item = props.item;
-    return (react_1.default.createElement("div", { className: 'well well-small' },
-        react_1.default.createElement("strong", null, item.title),
-        react_1.default.createElement("br", null),
-        "Error: ",
-        item.error,
-        react_1.default.createElement("div", { className: 'buttons' },
-            react_1.default.createElement(Button_1.default, { disabled: !authenticated, onClick: () => props.deleteFeed(item.uuid) }, "Delete"),
-            react_1.default.createElement(Button_1.default, { disabled: !authenticated, onClick: () => props.resolveFeed(item.uuid) }, "Resolve"),
-            react_1.default.createElement(Button_1.default, { href: `#feed/${item.uuid}` }, "View"))));
-};
-
-
-/***/ }),
+/* 44 */,
 /* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
