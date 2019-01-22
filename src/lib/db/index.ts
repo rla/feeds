@@ -41,7 +41,7 @@ const queued = async <T>(fn: () => Promise<T>) => {
 // tslint:disable-next-line:no-any
 const all = async (sql: string, ...params: any[]) => {
     const st = await prepare(sql);
-    return st.all(params);
+    return st.all(...params);
 };
 
 /**
@@ -50,7 +50,7 @@ const all = async (sql: string, ...params: any[]) => {
 // tslint:disable-next-line:no-any
 const run = async (sql: string, ...params: any[]) => {
     const st = await prepare(sql);
-    return st.run(params);
+    return st.run(...params);
 };
 
 /**

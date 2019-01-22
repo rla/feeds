@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from './button';
+import Button from './Button';
 import { ArticleData } from '../api';
 
 type Props = {
@@ -12,16 +12,28 @@ type Props = {
     read: (articleId: string) => void
 };
 
+const deleteFeed = (article: ArticleData, props: Props) => {
+    if (props.authenticated) {
+        if (confirm(`Delete the feed ${article.feed_title}?`)) {
+            props.deleteFeed(article.uuid);
+        }
+    }
+};
+
+/**
+ * Displays single article in a list view of the articles.
+ */
 export default (props: Props) => {
     const authenticated = props.authenticated;
     const item = props.item;
+    const dateString = item.date.toISOString().substring(0, 10);
     return (
         <div className='well well-small'>
             <strong>{item.title}</strong><br/>
-            Published {item.date.toISOString().substring(0, 10)} in <a href={`#feed/${item.feed}`}>{item.feed_title}</a>
+            Published {dateString} in <a href={`#feed/${item.feed}`}>{item.feed_title}</a>
             <div className='buttons'>
                 <Button disabled={!authenticated}
-                    onClick={() => props.deleteFeed(item.uuid)}>Delete feed</Button>
+                    onClick={() => deleteFeed(item, props)}>Delete feed</Button>
                 <Button disabled={!authenticated} inverse={!!item.is_read}
                     onClick={() => props.markRead(item.uuid)}>Mark read</Button>
                 <Button disabled={!authenticated} danger={!!item.is_important}

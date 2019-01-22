@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from './button';
+import Button from './Button';
 import { FeedStatRow } from '../../../../src/lib/data';
 
 type Props = {

@@ -2,14 +2,14 @@ import React from 'react';
 import { MouseEvent } from 'react';
 
 type Props = {
-    onLogout: () => void,
+    logout: () => void,
     authenticated: boolean
 };
 
 export default (props: Props) => {
     const logout = (e: MouseEvent) => {
         e.preventDefault();
-        props.onLogout();
+        props.logout();
     };
     return (
         <ul className='nav nav-pills'>

@@ -121,7 +121,7 @@ exports.markImportant = async (tx, uuid, important) => {
 exports.markSeen = async (tx, uuids) => {
     const sql = 'UPDATE article SET is_seen = ? WHERE uuid = ?';
     for (const uuid of uuids) {
-        await tx.run(sql, uuid);
+        await tx.run(sql, 1, uuid);
     }
 };
 /**

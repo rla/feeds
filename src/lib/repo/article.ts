@@ -135,7 +135,7 @@ export const markImportant = async (tx: Transaction, uuid: string, important: bo
 export const markSeen = async (tx: Transaction, uuids: string[]) => {
     const sql = 'UPDATE article SET is_seen = ? WHERE uuid = ?';
     for (const uuid of uuids) {
-        await tx.run(sql, uuid);
+        await tx.run(sql, 1, uuid);
     }
 };
 

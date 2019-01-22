@@ -33,7 +33,7 @@ const queued = async (fn) => {
 // tslint:disable-next-line:no-any
 const all = async (sql, ...params) => {
     const st = await prepare(sql);
-    return st.all(params);
+    return st.all(...params);
 };
 /**
  * Automatically prepares the statement and runs the query.
@@ -41,7 +41,7 @@ const all = async (sql, ...params) => {
 // tslint:disable-next-line:no-any
 const run = async (sql, ...params) => {
     const st = await prepare(sql);
-    return st.run(params);
+    return st.run(...params);
 };
 /**
  * Opens the database.
