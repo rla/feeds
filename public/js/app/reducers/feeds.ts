@@ -19,14 +19,16 @@ const initialState: FeedsFeedsState = {
 export default (state = initialState, action: FeedsAction): FeedsFeedsState => {
     switch (action.type) {
         case FEEDS_FEED_DELETED:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 items: state.items.filter((feed) => feed.uuid !== action.feedId)
-            });
+            };
         case FEEDS_LOADED:
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 items: state.items.concat(action.feeds),
                 start: state.start + action.feeds.length
-            });
+            };
         case FEEDS_INITIAL:
             return initialState;
         // TODO finish

@@ -11,9 +11,9 @@ const initialState = {
 export default (state = initialState, action: SpinnerAction): SpinnerState => {
     switch (action.type) {
         case SPINNER_SHOW:
-            return Object.assign({}, state, { show: true });
+            return { ...state, show: true };
         case SPINNER_HIDE:
-            return Object.assign({}, state, { show: false });
+            return { ...state, show: false };
         default:
             return state;
     }

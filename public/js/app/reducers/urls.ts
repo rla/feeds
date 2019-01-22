@@ -14,10 +14,7 @@ const initialState = {
 export default (state = initialState, action: UrlsAction): UrlsState => {
     switch (action.type) {
         case URLS_SET_TEXT:
-            return {
-                ...state,
-                text: action.text,
-            };
+            return { ...state, text: action.text };
         default:
             return state;
     }

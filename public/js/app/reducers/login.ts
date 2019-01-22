@@ -17,9 +17,15 @@ const initialState = {
 export default (state = initialState, action: LoginAction): LoginState => {
     switch (action.type) {
         case LOGIN_SET_USERNAME:
-            return Object.assign({}, state, { user: action.user });
+            return {
+                ...state,
+                user: action.user
+            };
         case LOGIN_SET_PASSWORD:
-            return Object.assign({}, state, { pass: action.pass });
+            return {
+                ...state,
+                pass: action.pass
+            };
         default:
             return state;
     }

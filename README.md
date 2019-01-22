@@ -66,7 +66,7 @@ customization of the default rules.
 
 ### Testing
 
-Testing for frontend is implemented using [jest][jest].
+Unit testing for frontend is implemented using [jest][jest].
 
 Running frontend tests:
 
