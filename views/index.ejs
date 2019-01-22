@@ -40,7 +40,12 @@
     </head>
     <body>
         <div id="root"></div>
-        <script src="/v-<%= version %>/js/libs.production.js"></script>
-        <script src="/v-<%= version %>/js/app.bundle.js"></script>
+        <% if (production) { %>
+            <script src="/v-<%= version %>/js/vendors.production.bundle.js"></script>
+            <script src="/v-<%= version %>/js/main.production.bundle.js"></script>
+        <% } else { %>
+            <script src="/v-<%= version %>/js/vendors.development.bundle.js"></script>
+            <script src="/v-<%= version %>/js/main.development.bundle.js"></script>
+        <% } %>
     </body>
 </html>

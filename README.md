@@ -12,11 +12,10 @@ the interesting data.
 
 The user interface uses the (custom) [Bootstrap](http://twitter.github.io/bootstrap/) stylesheet. I only
 selected the parts of Bootstrap that I needed. The UI is built as a single-page app on the
-[KnockoutJS](http://knockoutjs.com/) framework. It uses two additional small libs for routing
-and XHR handling. SQLite is used as database on the server side.
+React+Redux libraries. SQLite is used as database on the server side.
 
-Since 01-07-2017 the user interface has been rewritten in React. There is no difference
-in functionality, however.
+Since 2017-07-01, the user interface has been rewritten in React. There is no difference
+in functionality, however. The previous user interface was developed with Knockout.js.
 
 My live app is running at [http://feeds.rlaanemets.com/](http://feeds.rlaanemets.com/).
 
@@ -55,7 +54,7 @@ Frontend:
    - Typesafe actions, reducers, and state with TypeScript.
  * Typesafe REST API with shared types between frontend and backend.
  * Compiled and bundled through Webpack.
-   - Separated external libraries.
+   - Separated external libraries bundle.
 
 ### Code style
 
@@ -64,6 +63,37 @@ customization of the default rules.
 
 [tslint]: https://palantir.github.io/tslint/
 
+### Building
+
+Build backend:
+
+```
+npm run backend-compile
+```
+
+This creates `dist` directory. The backend code is ran by running:
+
+```
+node dist
+```
+
+Build frontend (production bundle):
+
+```
+npm run frontend-compile-production
+```
+
+or (development bundle in watch mode):
+
+```
+npm run frontend-compile-development
+```
+
+This will create either files `X.production.bundle.js` or `X.development.bundle.js`.
+The right file is selected by the bootstrapping HTML view which uses NODE_ENV
+environment variable provided to the backend node process. Production bundle is
+checked into git.
+
 ### Testing
 
 Unit testing for frontend is implemented using [jest][jest].
@@ -71,7 +101,7 @@ Unit testing for frontend is implemented using [jest][jest].
 Running frontend tests:
 
 ```sh
-npm run test-frontend
+npm run frontend-test
 ```
 
 What is tested?
@@ -85,6 +115,8 @@ What is tested?
 
 ## Changelog
 
+2019-01-22: Port to TypeScript + Redux. Unit tests.
+
 2017-07-01: UI rewrite to React.
 
 2016-12-30: Upgrading to version 0.2.0 requires a migration, run with:
@@ -95,7 +127,7 @@ What is tested?
 
 To start fetching of feeds immediately, start the app with `-f` switch:
 
-    node app.js -f
+    node dist -f
 
 ## Misc
 

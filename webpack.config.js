@@ -1,10 +1,10 @@
 const path = require('path');
 
-const config = {
+const config = (env, argv) => ({
     entry: path.join(__dirname, 'public', 'js', 'app', 'index.tsx'),
     output: {
         path: path.resolve(__dirname, 'public', 'js'),
-        filename: 'app.bundle.js'
+        filename: `[name].${argv.mode}.bundle.js`
     },
     module: {
         rules: [
@@ -18,16 +18,20 @@ const config = {
             }
         ]
     },
-    externals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
-        'redux': 'Redux',
-        'react-redux': 'ReactRedux',
-        'redux-thunk': 'ReduxThunk'
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all'
+                }
+            }
+        }
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json']
     }
-};
+});
 
 module.exports = config;
