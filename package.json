@@ -1,6 +1,6 @@
 {
   "name": "rla-feeds",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "dependencies": {
     "body-parser": "^1.18.3",

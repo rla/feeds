@@ -55,6 +55,13 @@ Frontend:
  * Typesafe REST API with shared types between frontend and backend.
  * Compiled and bundled through Webpack.
    - Separated external libraries bundle.
+ * UI elements use Bootstrap 2 default styles.
+   - It should be upgraded but I have not decided yet what to use.
+   - There is an opportunity to use CSS-in-JS approach. This approach
+     must support style sharing between global (h1, a, etc) elements
+     and between specific classes. I tried to use Typestyle for this
+     but it has no sharing support.
+   - Developing design from scratch is a lot of work anyway.
 
 ### Code style
 

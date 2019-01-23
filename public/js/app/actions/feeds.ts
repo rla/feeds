@@ -66,8 +66,8 @@ export const load = () => {
  */
 export const deleteFeed = (feedId: string) => {
     return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
-        await api.deleteFeed(feedId);
         await dispatch(feedDeleted(feedId));
+        await api.deleteFeed(feedId);
     };
 };
 
@@ -76,8 +76,8 @@ export const deleteFeed = (feedId: string) => {
  */
 export const markSeen = (feedId: string) => {
     return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
-        await api.seenFeed(feedId);
         await dispatch(feedMarkedSeen(feedId));
+        await api.seenFeed(feedId);
     };
 };
 
@@ -86,8 +86,8 @@ export const markSeen = (feedId: string) => {
  */
 export const markRead = (feedId: string) => {
     return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
-        await api.readFeed(feedId);
         await dispatch(feedMarkedRead(feedId));
+        await api.readFeed(feedId);
     };
 };
 

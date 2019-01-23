@@ -15,15 +15,25 @@ type Props = {
 export default (props: Props) => {
     const authenticated = props.authenticated;
     const item = props.item;
+    const deleteFeed = () => {
+        if (props.authenticated) {
+            if (confirm(`Delete the feed ${item.title}?`)) {
+                props.deleteFeed(item.uuid);
+            }
+        }
+    };
+    const resolveFeed = () => {
+        if (props.authenticated) {
+            props.resolveFeed(item.uuid);
+        }
+    };
     return (
         <div className='well well-small'>
             <strong>{item.title}</strong><br/>
             Error: {item.error}
             <div className='buttons'>
-                <Button disabled={!authenticated}
-                    onClick={() => props.deleteFeed(item.uuid)}>Delete</Button>
-                <Button disabled={!authenticated}
-                    onClick={() => props.resolveFeed(item.uuid)}>Resolve</Button>
+                <Button disabled={!authenticated} onClick={deleteFeed}>Delete</Button>
+                <Button disabled={!authenticated} onClick={resolveFeed}>Resolve</Button>
                 <Button href={`#feed/${item.uuid}`}>View</Button>
             </div>
         </div>

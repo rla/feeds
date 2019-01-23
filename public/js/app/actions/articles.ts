@@ -160,9 +160,9 @@ export const markSeen = (articleId: string) => {
  */
 export const read = (articleId: string) => {
     return async (dispatch: ThunkDispatch, getState: () => FeedsState, api: Api) => {
-        await dispatch({ type: ARTICLES_MARK_READ, articleId });
         const state = getState();
         if (state.auth.authenticated) {
+            await dispatch({ type: ARTICLES_MARK_READ, articleId });
             await api.markRead(articleId);
         }
     };

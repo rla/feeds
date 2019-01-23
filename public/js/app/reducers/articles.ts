@@ -8,6 +8,7 @@ import {
     ARTICLES_TOGGLE_READ,
     ARTICLES_MARK_SEEN
 } from '../actions/articles';
+import updateItem from './updateItem';
 
 export type ArticleSource = 'all' | 'important' | 'unseen' | 'feed' | 'search';
 
@@ -23,16 +24,6 @@ const initialState: ArticlesState = {
     source: 'unseen',
     items: [],
     rowid: MAX_ROW_ID
-};
-
-/**
- * Helper function to update single item in array.
- */
-const updateItem = <T>(array: T[], index: number, fn: (item: T) => T): T[] => {
-    const item = array[index];
-    const copy = array.slice(0);
-    copy[index] = fn(item);
-    return copy;
 };
 
 /**
@@ -71,7 +62,7 @@ export default (state = initialState, action: ArticlesAction): ArticlesState => 
             };
         case ARTICLES_TOGGLE_READ:
             return updateArticle(state, action.articleId, (article) => {
-                return { ...article, is_read: article.is_read === 1 ? 0 : 1 };
+                return { ...article, is_read: article.is_read === 1 ? 0 : 1, is_seen: 1 };
             });
         case ARTICLES_MARK_READ:
             return updateArticle(state, action.articleId, (article) => {

@@ -47,4 +47,4 @@ it('handles the initial action', () => {
     expect(state.start).toBe(0);
 });
 
-// TODO finish
+// TODO: add tests for the remaining reducers.

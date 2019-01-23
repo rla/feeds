@@ -3,6 +3,7 @@ import { FeedsState } from '../store';
 import { viewToDisplay } from '../selectors/route';
 import { logout } from '../actions/auth';
 import App from '../components/App';
+import { ThunkDispatch } from '../actions/thunk';
 
 const mapStateToProps = (state: FeedsState) => ({
     display: viewToDisplay(state.route.view),
@@ -10,10 +11,12 @@ const mapStateToProps = (state: FeedsState) => ({
     authenticated: state.auth.authenticated
 });
 
-const mapDispatchToProps = () => ({ logout });
+const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
+    logout: () => dispatch(logout())
+});
 
 /**
- * Fetch - based container component for the list of invalid feeds.
+ * The root application components.
  */
 const AppContainer = connect(
   mapStateToProps,

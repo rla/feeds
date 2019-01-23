@@ -21,14 +21,29 @@ export default (props: Props) => {
     const dateString = item.date.toISOString().substring(0, 10);
     const deleteFeed = () => {
         if (props.authenticated) {
-            if (confirm(`Delete the feed ${props.item.feed_title}?`)) {
-                props.deleteFeed(props.item.uuid);
+            if (confirm(`Delete the feed ${item.feed_title}?`)) {
+                props.deleteFeed(item.uuid);
             }
         }
     };
+    const markRead = () => {
+        if (props.authenticated) {
+            props.markRead(item.uuid);
+        }
+    };
+    const markImportant = () => {
+        if (props.authenticated) {
+            props.markImportant(item.uuid);
+        }
+    };
+    const markSeen = () => {
+        if (props.authenticated) {
+            props.markSeen(item.uuid);
+        }
+    };
     const read = () => {
-        props.read(props.item.uuid);
-        const tab = window.open(props.item.link, '_blank');
+        props.read(item.uuid);
+        const tab = window.open(item.link, '_blank');
         if (tab) {
             tab.focus();
         }
@@ -41,11 +56,11 @@ export default (props: Props) => {
                 <Button disabled={!authenticated}
                     onClick={deleteFeed}>Delete feed</Button>
                 <Button disabled={!authenticated} inverse={!!item.is_read}
-                    onClick={() => props.markRead(item.uuid)}>Mark read</Button>
+                    onClick={markRead}>Mark read</Button>
                 <Button disabled={!authenticated} danger={!!item.is_important}
-                    onClick={() => props.markImportant(item.uuid)}>Important</Button>
+                    onClick={markImportant}>Important</Button>
                 <Button disabled={!authenticated} inverse={!!item.is_seen}
-                    onClick={() => props.markSeen(item.uuid)}>Seen</Button>
+                    onClick={markSeen}>Seen</Button>
                 <Button inverse={!!item.is_read}
                     onClick={read}>Read</Button>
             </div>

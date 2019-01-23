@@ -33,12 +33,9 @@ router.route(/^important/, () => dispatchThunk(routeView('important')));
 router.route(/^unseen/, () => dispatchThunk(routeView('unseen')));
 router.route(/^invalid/, () => dispatchThunk(routeView('invalid')));
 router.route(/^feeds/, () => dispatchThunk(routeView('feeds')));
-router.route(/^search/, () => dispatchThunk(routeView('search')));
+router.route(/^search$/, () => dispatchThunk(routeView('search')));
 router.route(/^feed\/([A-Za-z0-9\-]+)/, (uuid: string) => dispatchThunk(routeView('feed', [uuid])));
-/*
-router.route(/^search$/, () => this.setDisplay('search_form'));
-router.route(/^search\/(.+)/, (query: string) => this.setDisplay('search', { query }));*/
-
+router.route(/^results\/(.+)/, (query: string) => dispatchThunk(routeView('results', [query])));
 router.route(/.*/, () => router.go('unseen'));
 
 ReactDOM.render(<Provider store={store}><AppContainer/></Provider>,

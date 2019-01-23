@@ -1,5 +1,6 @@
 import { ThunkDispatch } from './thunk';
-import { routeView } from './route';
+import * as router from '../router';
+import { FeedsState } from '../store';
 
 export const SEARCH_SET_QUERY = 'SEARCH_SET_QUERY';
 
@@ -11,12 +12,11 @@ export type SearchSetQuery = {
 export type SearchAction = SearchSetQuery;
 
 /**
- * Submits the search form. Dispatches action to
- * show the search result view.
+ * Submits the search form.
  */
 export const submit = () => {
-    return async (dispatch: ThunkDispatch) => {
-        await dispatch(routeView('results'));
+    return async (dispatch: ThunkDispatch, getState: () => FeedsState) => {
+        router.go('results', getState().search.query);
     };
 };
 
