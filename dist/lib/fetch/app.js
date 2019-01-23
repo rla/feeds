@@ -9,7 +9,7 @@ const promise_queue_1 = __importDefault(require("promise-queue"));
 const fast_feed_1 = __importDefault(require("fast-feed"));
 const debug_1 = __importDefault(require("debug"));
 const split_1 = __importDefault(require("split"));
-const config_1 = __importDefault(require("../config"));
+const readConfig_1 = require("../readConfig");
 const debug = debug_1.default('app:fetch');
 const writeOutput = util_1.default.promisify((msg, cb) => process.stdout.write(msg, cb));
 const promisedRequest = util_1.default.promisify(request_1.default);
@@ -39,10 +39,10 @@ const parse = (feed) => {
 };
 // Fetches single url and parses result.
 // Calls cb at the end.
-const fetch = async (feed) => {
+const fetch = async (config, feed) => {
     const options = {
         url: feed.url,
-        timeout: config_1.default.timeout,
+        timeout: config.timeout,
         strictSSL: false,
         maxRedirects: 5
     };
@@ -87,8 +87,13 @@ const outputError = async (err, feed) => {
 // Fetches all given urls.
 // Does it so by parallel requests.
 const fetchAll = async (feeds) => {
-    debug(`Using ${config_1.default.requests} concurrent requests`);
-    const queue = new promise_queue_1.default(config_1.default.requests);
-    return Promise.all(feeds.map((feed) => queue.add(() => fetch(feed))));
+    const configFile = process.argv[1];
+    if (!configFile) {
+        throw new Error('Config file is not specified.');
+    }
+    const config = await readConfig_1.readConfig(configFile, 'child');
+    debug(`Using ${config.requests} concurrent requests`);
+    const queue = new promise_queue_1.default(config.requests);
+    return Promise.all(feeds.map((feed) => queue.add(() => fetch(config, feed))));
 };
 //# sourceMappingURL=app.js.map

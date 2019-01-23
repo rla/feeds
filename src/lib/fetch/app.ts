@@ -9,7 +9,7 @@ import {
     FetchFeedOut,
     FetchError
 } from '../data';
-import config from '../config';
+import { readConfig, Config } from '../readConfig';
 
 const debug = debugLogger('app:fetch');
 
@@ -66,7 +66,7 @@ const parse = (feed: string) => {
 // Fetches single url and parses result.
 // Calls cb at the end.
 
-const fetch = async (feed: FetchFeedIn) => {
+const fetch = async (config: Config, feed: FetchFeedIn) => {
     const options = {
         url: feed.url,
         timeout: config.timeout,
@@ -117,7 +117,12 @@ const outputError = async (err: Error, feed: FetchFeedIn) => {
 // Does it so by parallel requests.
 
 const fetchAll = async (feeds: FetchFeedIn[]) => {
+    const configFile = process.argv[1];
+    if (!configFile) {
+        throw new Error('Config file is not specified.');
+    }
+    const config = await readConfig(configFile, 'child');
     debug(`Using ${config.requests} concurrent requests`);
     const queue = new PromiseQueue(config.requests);
-    return Promise.all(feeds.map((feed) => queue.add(() => fetch(feed))));
+    return Promise.all(feeds.map((feed) => queue.add(() => fetch(config, feed))));
 };

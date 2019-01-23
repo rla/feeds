@@ -1,7 +1,6 @@
 import debugLogger from 'debug';
-import * as db from './db';
+import { Database } from './db';
 import {
-    FeedRow,
     FetchError,
     FetchFeedOut,
     FeedArticle
@@ -15,16 +14,16 @@ const debug = debugLogger('app:service');
 /**
  * Updates all feeds in the database.
  */
-export const update = async () => {
-    const feeds = await db.tx(async (tx) => feedRepo.all(tx));
+export default async (database: Database) => {
+    const feeds = await database.transaction((tx) => feedRepo.all(tx));
     debug(`Updating ${feeds.length} feeds.`);
     const result = await fetch(feeds);
-    await updateDatabase(result.feeds);
-    await saveErrors(result.errors);
+    await updateDatabase(database, result.feeds);
+    await saveErrors(database, result.errors);
 };
 
-const updateDatabase = async (feeds: FetchFeedOut[]) => {
-    await db.tx(async (tx) => {
+const updateDatabase = async (database: Database, feeds: FetchFeedOut[]) => {
+    await database.transaction(async (tx) => {
         for (const feed of feeds) {
             if (!feed.title) {
                 feed.title = 'Untitled';
@@ -51,8 +50,8 @@ const updateDatabase = async (feeds: FetchFeedOut[]) => {
     });
 };
 
-const saveErrors = async (errors: FetchError[]) => {
-    return db.tx(async (tx) => {
+const saveErrors = async (database: Database, errors: FetchError[]) => {
+    return database.transaction(async (tx) => {
         await feedRepo.clearErrors(tx);
         for (const error of errors) {
             await feedRepo.mark(tx, error.uuid, error.err);

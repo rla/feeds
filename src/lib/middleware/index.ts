@@ -4,8 +4,9 @@ import express from 'express';
 import buster from './buster';
 import cookies from './cookies';
 import session from './session';
+import { Config } from '../readConfig';
 
-export default (app: Application) => {
+export default (app: Application, config: Config) => {
     app.use(buster());
     let staticOptions = {};
     if (process.env.NODE_ENV === 'production') {
@@ -14,6 +15,6 @@ export default (app: Application) => {
     app.use(express.static(
         path.join(__dirname, '..', '..', '..', 'public'),
         staticOptions));
-    app.use(cookies());
+    app.use(cookies(config));
     app.use(session());
 };

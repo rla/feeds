@@ -189,6 +189,8 @@ To start fetching of feeds immediately, start the app with `-f` switch:
 
     node dist -f
 
+TODO: debug package.
+
 ## Misc
 
 App's favicon is from [favicon.cc](http://www.favicon.cc/?action=icon&file_id=360427), made by Jason.

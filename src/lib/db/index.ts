@@ -1,97 +1,103 @@
 import sqlite from 'sqlite';
 import PromiseQueue from 'promise-queue';
 
-const queue = new PromiseQueue(1);
+// tslint:disable: no-any
 
-type Instance = {
-    _sqlite: sqlite.Database,
-    all: typeof all,
-    run: typeof run
+/**
+ * Transaction-scoped queries.
+ */
+export type Transaction = {
+    run: (sql: string, ...params: any[]) => Promise<void>;
+    all: (sql: string, ...params: any[]) => Promise<any[]>;
 };
 
-let db: Instance;
+/**
+ * Transaction provider. Has a single method that accepts
+ * a function and provides a transaction to this function.
+ */
+export type Database = {
+    transaction: <T>(fn: (tx: Transaction) => Promise<T>) => Promise<T>
+};
 
 // Keeps prepared statements.
 // These have to be finalized before
 // connection can be closed.
+type PrepareMap = Map<string, sqlite.Statement>;
 
-const prepared = new Map<string, sqlite.Statement>();
+/**
+ * Helper class for objects that hold opened SQLite database.
+ * Queries are serialized through a queue to ensure that
+ * statements from different transaction won't interleave.
+ */
+export class SqliteDatabase implements Transaction, Database {
 
-const prepare = async (sql: string): Promise<sqlite.Statement> => {
-    if (prepared.has(sql)) {
-        return prepared.get(sql) as sqlite.Statement;
+    public filename: string;
+    public sqlite: sqlite.Database;
+    public prepared: PrepareMap;
+    public queue: PromiseQueue;
+
+    constructor(filename: string) {
+        this.filename = filename;
+        this.prepared = new Map<string, sqlite.Statement>();
+        this.queue = new PromiseQueue(1);
     }
-    const statement = await db._sqlite.prepare(sql);
-    prepared.set(sql, statement);
-    return statement;
-};
 
-/**
- * Helper to serialize access to the database. Used
- * for implementing transactions.
- */
-const queued = async <T>(fn: () => Promise<T>) => {
-    return queue.add(fn);
-};
-
-/**
- * Automatically prepares the statement, runs the query,
- * and returns all results.
- */
-// tslint:disable-next-line:no-any
-const all = async (sql: string, ...params: any[]) => {
-    const st = await prepare(sql);
-    return st.all(...params);
-};
-
-/**
- * Automatically prepares the statement and runs the query.
- */
-// tslint:disable-next-line:no-any
-const run = async (sql: string, ...params: any[]) => {
-    const st = await prepare(sql);
-    await st.run(...params);
-};
-
-/**
- * Opens the database.
- */
-export const open = async (filename: string) => {
-    db = { _sqlite: await sqlite.open(filename), run, all };
-};
-
-/**
- * Closes the database.
- */
-export const close = async () => {
-    for (const st of prepared.values()) {
-        await st.finalize();
+    /**
+     * Opens the database.
+     */
+    async open() {
+        this.sqlite = await sqlite.open(this.filename);
     }
-    await db._sqlite.close();
-};
 
-/**
- * Available methods on a single transaction.
- */
-export type Transaction = {
-    all: typeof all,
-    run: typeof run,
-};
-
-/**
- * Wraps the query or multiple queries into a transaction.
- */
-export const tx = async <T>(fn: (tx: Transaction) => Promise<T>) => {
-    const wrapper = async (): Promise<T> => {
-        try {
-            await db._sqlite.run('BEGIN TRANSACTION');
-            const ret = await fn(db);
-            await db._sqlite.run('COMMIT TRANSACTION');
-            return ret;
-        } catch (err) {
-            await db._sqlite.run('ROLLBACK TRANSACTION');
-            throw err;
+    /**
+     * Closes the database.
+     */
+    async close() {
+        for (const st of this.prepared.values()) {
+            await st.finalize();
         }
-    };
-    return queued(wrapper);
-};
+        await this.sqlite.close();
+    }
+
+    /**
+     * Prepares the statement.
+     */
+    async prepare(sql: string): Promise<sqlite.Statement> {
+        const prepared = this.prepared;
+        if (prepared.has(sql)) {
+            return prepared.get(sql) as sqlite.Statement;
+        }
+        const statement = await this.sqlite.prepare(sql);
+        prepared.set(sql, statement);
+        return statement;
+    }
+
+    async run(sql: string, ...params: any[]) {
+        const st = await this.prepare(sql);
+        await st.run(...params);
+    }
+
+    async all(sql: string, ...params: any[]) {
+        const st = await this.prepare(sql);
+        return st.all(...params);
+    }
+
+    /**
+     * Runs the given async function through queue and wraps
+     * it into a transaction.
+     */
+    transaction<T>(fn: (runner: Transaction) => Promise<T>) {
+        const wrapper = async (): Promise<T> => {
+            try {
+                await this.sqlite.run('BEGIN TRANSACTION');
+                const ret = await fn(this);
+                await this.sqlite.run('COMMIT TRANSACTION');
+                return ret;
+            } catch (err) {
+                await this.sqlite.run('ROLLBACK TRANSACTION');
+                throw err;
+            }
+        };
+        return this.queue.add(wrapper);
+    }
+}

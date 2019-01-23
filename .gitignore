@@ -6,3 +6,4 @@ public/js/bundle/all.debug.js
 public/js/bundle/all.js
 public/js/main.development.bundle.js
 public/js/vendors.development.bundle.js
+testing/db.sqlite

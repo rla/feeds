@@ -1,18 +1,16 @@
-import fs from 'fs';
-import path from 'path';
 import { Application } from 'express';
 import { AppRequest } from '../express';
-import config from '../config';
+import { Config } from '../readConfig';
 
-const packageData = JSON.parse(fs.readFileSync(
-    path.join(__dirname, '..', '..', '..', 'package.json'), 'utf8'));
-
-export default (app: Application) => {
+/**
+ * Sets up route handlers for static HTML pages.
+ */
+export default (app: Application, config: Config) => {
 
     app.get('/', (req, res) => {
         res.render('index', {
             loggedIn: (req as AppRequest).isAuthenticated(),
-            version: packageData.version,
+            version: config.version,
             title: config.title || 'Feeds',
             production: process.env.NODE_ENV === 'production'
         });

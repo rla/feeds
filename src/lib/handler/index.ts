@@ -1,8 +1,13 @@
 import { Application } from 'express';
 import api from './api';
 import front from './front';
+import { Database } from '../db';
+import { Config } from '../readConfig';
 
-export default (app: Application) => {
-    api(app);
-    front(app);
+/**
+ * Sets up all application routes.
+ */
+export default (app: Application, config: Config, database: Database) => {
+    api(app, config, database);
+    front(app, config);
 };
