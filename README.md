@@ -10,12 +10,12 @@ The application runs on NodeJS. Feeds are parsed with [fast-feed](https://github
 which uses [RapidXML](http://rapidxml.sourceforge.net/) internally to parse the feed and extract
 the interesting data.
 
-The user interface uses the (custom) [Bootstrap](http://twitter.github.io/bootstrap/) stylesheet. I only
-selected the parts of Bootstrap that I needed. The UI is built as a single-page app on the
-React+Redux libraries. SQLite is used as database on the server side.
+The user interface uses a (custom) [Bootstrap](http://twitter.github.io/bootstrap/) stylesheet. I only
+selected the parts of Bootstrap that I needed. SQLite is used as the database on the server side.
 
 Since 2017-07-01, the user interface has been rewritten in React. There is no difference
-in functionality, however. The previous user interface was developed with Knockout.js.
+in functionality compared to the previous versions, however. The previous user interface
+was developed with Knockout.js.
 
 My live app is running at [http://feeds.rlaanemets.com/](http://feeds.rlaanemets.com/).
 
@@ -24,12 +24,14 @@ My live app is running at [http://feeds.rlaanemets.com/](http://feeds.rlaanemets
  1. First install dependencies using `npm install --production`.
  2. Then create database using `make db.sqlite`.
  3. Then copy `config.example.json` to `config.json`.
- 4. Run app with `NODE_ENV=production node app.js`.
+ 4. Run app with `NODE_ENV=production node dist`.
 
 ## Importing feed addresses
 
 Use the textarea on top of the "Feeds" list to enter a list of urls.
-Invalid urls and feeds will later be shown under "Invalid".
+Invalid urls and feeds will later be shown under "Invalid". The urls have to point
+directly to newsfeeds. The newsfeed urls are currently not extracted from
+site urls!
 
 ## Technology
 
@@ -40,11 +42,22 @@ are very dynamic to have useful types.
 
 ### Architecture
 
+The application is built as a Single Page Application (SPA) with a server-side
+backend. The backend manages the database, fetches newsfeeds periodically, and
+provides a REST API for the frontend.
+
 Backend:
 
+ * [Express][express] web framework.
  * SQLite database.
    - Uses package `node-sqlite` for Promise-based access.
    - Custom transaction manager in `src/lib/db`.
+ * [Fast-feed][fast-feed] RSS/Atom parser.
+   - This package was developed for this application although
+     it has been used by others too.
+
+[express]: https://expressjs.com/
+[fast-feed]: https://github.com/rla/fast-feed
 
 Frontend:
 
@@ -61,7 +74,7 @@ Frontend:
      must support style sharing between global (h1, a, etc) elements
      and between specific classes. I tried to use Typestyle for this
      but it has no sharing support.
-   - Developing design from scratch is a lot of work anyway.
+   - Developing a custom design from scratch is a lot of work.
 
 ### Code style
 
@@ -98,17 +111,25 @@ npm run frontend-compile-development
 
 This will create either files `X.production.bundle.js` or `X.development.bundle.js`.
 The right file is selected by the bootstrapping HTML view which uses NODE_ENV
-environment variable provided to the backend node process. Production bundle is
+environment variable provided to the backend node process. The production bundle is
 checked into git.
 
 ### Testing
 
 Unit testing for frontend is implemented using [jest][jest].
 
+[jest]: https://jestjs.io/
+
 Running frontend tests:
 
 ```sh
 npm run frontend-test
+```
+
+Running backend tests:
+
+```sh
+npm run backend-test
 ```
 
 What is tested?
@@ -118,7 +139,23 @@ What is tested?
  * Redux actions including async actions. Api is mocked and
    actions are checked to create correct actions.
  * Shallow rendering of React components to catch potential crashes.
+ * Some backend functionality is unit-tested.
  * More cases can be easily added to the existing tests.
+
+### Toolset configuration
+
+The project contains the following toolset configuration files (as
+a future reference for a similar project):
+
+ * `package.json` - standard NPM configuration for the project.
+ * `jest.backend.config.js` - Jest configuration for the backend tests.
+ * `jest.frontend.config.js` - Jest configuration for the frontend tests. Differs
+   by the TypeScript configuration file location and some plugins.
+ * `tslint.json` - TSLint configuration.
+ * `src/tsconfig.json` - TypeScript configuration for the backend.
+ * `public/js/app/tsconfig.json` - TypeScript configuration for the frontend. Has support
+   for JSX.
+ * `webpack.config.js` - Webpack configuration for the frontend.
 
 ## Changelog
 
