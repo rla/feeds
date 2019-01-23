@@ -4,6 +4,10 @@ My personal web-based replacement for Google Reader and other feed readers. It t
 seen/read/important articles and is built for speed. I currently follow
 about 600 feeds and some readers had trouble coping with this amount of feeds.
 
+## How does it work
+
+
+
 ## How is it built
 
 The application runs on NodeJS. Feeds are parsed with [fast-feed](https://github.com/rla/fast-feed)
@@ -59,6 +63,14 @@ Backend:
 [express]: https://expressjs.com/
 [fast-feed]: https://github.com/rla/fast-feed
 
+Backend files:
+
+ * `src` - source tree (TypeScript).
+ * `src/index.ts` - application entrypoint.
+ * `Makefile` - helper to create an initial database state.
+ * `schema/schema.sql` - database schema.
+ * `schema/migrations` - migrations applied after the initial schema.
+
 Frontend:
 
  * React view library.
@@ -75,6 +87,10 @@ Frontend:
      and between specific classes. I tried to use Typestyle for this
      but it has no sharing support.
    - Developing a custom design from scratch is a lot of work.
+
+Frontend files:
+
+ * `public/js/app` - SPA source (TypeScript).
 
 ### Code style
 
