@@ -4,7 +4,7 @@ import {
     SPINNER_SHOW,
     SPINNER_HIDE
 } from './spinner';
-import mockStore from '../testing/mockStore';
+import mockStore from '../testing/mock/store';
 
 it('dispatches the show action', async () => {
     const store = mockStore({});

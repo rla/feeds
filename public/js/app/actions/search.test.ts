@@ -1,5 +1,5 @@
 import { setQuery, SEARCH_SET_QUERY, submit } from './search';
-import mockStore from '../testing/mockStore';
+import mockStore from '../testing/mock/store';
 
 it('dispatches the setQuery action', async () => {
     const store = mockStore({});

@@ -7,7 +7,7 @@ import {
     resolveFeed,
     INVALID_FEED_RESOLVED
 } from './invalid';
-import mockStore from '../testing/mockStore';
+import mockStore from '../testing/mock/store';
 
 it('dispatches the loadInitial action', async () => {
     const store = mockStore({ invalid: { start: 0 } });

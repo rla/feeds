@@ -4,7 +4,7 @@ import {
     AUTH_LOGGED_OUT,
     AUTH_SUCCESSFUL
 } from './auth';
-import mockStore from '../testing/mockStore';
+import mockStore from '../testing/mock/store';
 
 it('dispatches the login action', async () => {
     const store = mockStore({ login: { user: 'test', pass: 'test' } });

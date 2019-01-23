@@ -3,7 +3,7 @@ import {
     submit,
     URLS_SET_TEXT
 } from './urls';
-import mockStore from '../testing/mockStore';
+import mockStore from '../testing/mock/store';
 
 it('dispatches the setText action', async () => {
     const store = mockStore({});

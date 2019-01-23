@@ -13,7 +13,7 @@ import {
     ARTICLES_TOGGLE_IMPORTANT,
     ARTICLES_TOGGLE_READ
 } from './articles';
-import mockStore from '../testing/mockStore';
+import mockStore from '../testing/mock/store';
 
 const mockState = {
     auth: { authenticated: true },

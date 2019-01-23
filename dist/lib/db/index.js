@@ -41,7 +41,7 @@ const all = async (sql, ...params) => {
 // tslint:disable-next-line:no-any
 const run = async (sql, ...params) => {
     const st = await prepare(sql);
-    return st.run(...params);
+    await st.run(...params);
 };
 /**
  * Opens the database.

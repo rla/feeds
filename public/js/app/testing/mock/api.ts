@@ -1,4 +1,4 @@
-import { Api } from '../api';
+import { Api } from '../../api';
 
 // tslint:disable: no-empty
 export const mockApi: Api = {

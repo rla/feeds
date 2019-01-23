@@ -1,5 +1,5 @@
 import { routeView, routeScroll } from './route';
-import mockStore from '../testing/mockStore';
+import mockStore from '../testing/mock/store';
 import { ROUTE_VIEW } from './route';
 import { ARTICLES_INITIAL, ARTICLES_LOADED } from './articles';
 

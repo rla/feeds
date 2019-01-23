@@ -10,7 +10,7 @@ import {
     FEEDS_FEED_MARKED_SEEN,
     FEEDS_FEED_MARKED_READ
 } from './feeds';
-import mockStore from '../testing/mockStore';
+import mockStore from '../testing/mock/store';
 
 it('dispatches the loadInitial action', async () => {
     const store = mockStore({ feeds: { start: 0 } });

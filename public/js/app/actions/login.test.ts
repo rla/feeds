@@ -5,7 +5,7 @@ import {
     LOGIN_SET_USERNAME,
     LOGIN_SET_PASSWORD
 } from './login';
-import mockStore from '../testing/mockStore';
+import mockStore from '../testing/mock/store';
 import { AUTH_SUCCESSFUL } from './auth';
 
 it('dispatches the setUser action', async () => {

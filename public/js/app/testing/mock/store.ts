@@ -1,7 +1,7 @@
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { mockApi } from './mockApi';
-import { ThunkDispatch } from '../actions/thunk';
+import { mockApi } from './api';
+import { ThunkDispatch } from '../../actions/thunk';
 import { AnyAction } from 'redux';
 
 type FeedsMockStore = {
