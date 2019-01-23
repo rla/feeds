@@ -59,9 +59,10 @@
   "scripts": {
     "backend-compile": "tsc --build src/tsconfig.json",
     "backend-lint": "tslint 'src/**/*.ts'",
+    "backend-test": "jest --config=jest.backend.config.js",
     "frontend-compile-production": "webpack --mode=production",
     "frontend-compile-development": "webpack -w --mode=development",
-    "frontend-test": "jest",
+    "frontend-test": "jest --config=jest.frontend.config.js",
     "frontend-lint": "tslint 'public/js/app/**/*.ts'"
   }
 }

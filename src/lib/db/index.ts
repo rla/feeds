@@ -50,7 +50,7 @@ const all = async (sql: string, ...params: any[]) => {
 // tslint:disable-next-line:no-any
 const run = async (sql: string, ...params: any[]) => {
     const st = await prepare(sql);
-    return st.run(...params);
+    await st.run(...params);
 };
 
 /**
