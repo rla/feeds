@@ -1,0 +1,9 @@
+{
+    "db": "testing/fetcher.db.sqlite",
+    "requests": 20,
+    "polltime": 60000,
+    "timeout": 10000,
+    "auth": [],
+    "sessionSecret": "secret",
+    "title": "Feeds"
+}

@@ -20,9 +20,7 @@ class SqliteDatabase {
      * Opens the database.
      */
     async open() {
-        console.log('SQLITE OPENING');
         this.sqlite = await sqlite_1.default.open(this.filename);
-        console.log('SQLITE OPENED');
     }
     /**
      * Closes the database.
@@ -46,11 +44,11 @@ class SqliteDatabase {
         return statement;
     }
     async run(sql, ...params) {
-        const st = await this.sqlite.prepare(sql);
+        const st = await this.prepare(sql);
         await st.run(...params);
     }
     async all(sql, ...params) {
-        const st = await this.sqlite.prepare(sql);
+        const st = await this.prepare(sql);
         return st.all(...params);
     }
     /**

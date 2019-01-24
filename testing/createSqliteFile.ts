@@ -10,12 +10,11 @@ const exists = util.promisify(fs.exists);
 
 const SCHEMA_DIR = path.join(__dirname, '..', 'schema');
 const MIGRATIONS_DIR = path.join(SCHEMA_DIR, 'migrations');
-const DATA_FILE = path.join(__dirname, 'test.data.sql');
 
 /**
  * Creates database with test data in the given file.
  */
-export default async (filename: string) => {
+export default async (filename: string, dataFilename: string) => {
     if (await exists(filename)) {
         await unlink(filename);
     }
@@ -26,7 +25,7 @@ export default async (filename: string) => {
     for (const migration of migrations) {
         wholeSchema += '\r\n' + (await readFile(path.join(MIGRATIONS_DIR, migration), 'utf8'));
     }
-    wholeSchema += '\r\n' + (await readFile(DATA_FILE, 'utf8'));
+    wholeSchema += '\r\n' + (await readFile(dataFilename, 'utf8'));
     return runSqlite(filename, wholeSchema);
 };
 
