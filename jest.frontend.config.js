@@ -8,6 +8,5 @@ module.exports = {
             tsConfig: './public/js/app/tsconfig.json'
         }
     },
-    snapshotSerializers: ['enzyme-to-json/serializer'],
     setupTestFrameworkScriptFile: './public/js/app/testing/setup.ts'
 };
