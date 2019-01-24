@@ -1,6 +1,7 @@
 import * as invalid from './invalid';
 import * as feeds from './feeds';
 import * as articles from './articles';
+import * as search from './search';
 import { ThunkDispatch } from './thunk';
 import { FeedsState } from '../store';
 import { View } from '../reducers/route';
@@ -24,6 +25,9 @@ export const routeView = (view: View, args?: string[]) => {
         } else if (view === 'feeds') {
             await dispatch(feeds.loadInitial());
         } else if (view === 'results') {
+            if (args && args[0]) {
+                await dispatch(search.setQuery(args[0]));
+            }
             await dispatch(articles.loadInitial('search'));
         } else if (view === 'feed') {
             await dispatch(articles.loadInitial('feed'));

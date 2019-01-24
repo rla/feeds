@@ -130,7 +130,7 @@ The right file is selected by the bootstrapping HTML view which uses NODE_ENV
 environment variable provided to the backend node process. The production bundle is
 checked into git.
 
-### Testing
+### Unit testing
 
 Unit testing for frontend is implemented using [jest][jest].
 
@@ -158,6 +158,38 @@ What is tested?
  * Some backend functionality is unit-tested.
  * More cases can be easily added to the existing tests.
 
+### Integration/E2E testing
+
+There are 2 integration tests: running newsfeed updates from the command
+line and full stack test with [Puppeteer][puppeteer]. Tests are executes using Jest
+again, except that they are run serially to save resources and avoid
+possible interleaving issues from concurrency.
+
+[puppeteer]: https://github.com/GoogleChrome/puppeteer
+
+ * Newsfeed update test: `testing/fetcher.test.js`.
+ * Full stack integration test: `testing/app.test.js`.
+
+Both tests run fully compiled application. To compile:
+
+```
+npm run backend-compile
+npm run frontend-compile
+```
+
+And run tests:
+
+```
+npm run integration-test
+```
+
+If whole stack test gives an error then the app can be started with test
+data using:
+
+```
+node dist -c testing/app.config.json
+```
+
 ### Toolset configuration
 
 The project contains the following toolset configuration files (as
@@ -166,7 +198,9 @@ a future reference for a similar project):
  * `package.json` - standard NPM configuration for the project.
  * `jest.backend.config.js` - Jest configuration for the backend tests.
  * `jest.frontend.config.js` - Jest configuration for the frontend tests. Differs
-   by the TypeScript configuration file location and some plugins.
+   by the TypeScript configuration file locations and some plugins.
+ * `jest.integration.config.js` - Jest configuration for the integration tests. Differs
+   by the TypeScript configuration file locations.
  * `tslint.json` - TSLint configuration.
  * `src/tsconfig.json` - TypeScript configuration for the backend.
  * `public/js/app/tsconfig.json` - TypeScript configuration for the frontend. Has support
@@ -175,13 +209,11 @@ a future reference for a similar project):
 
 ## Changelog
 
-2019-01-22: Port to TypeScript + Redux. Unit tests.
-
-2017-07-01: UI rewrite to React.
-
-2016-12-30: Upgrading to version 0.2.0 requires a migration, run with:
-
-    sqlite3 db.sqlite < schema/migrations/004_add_article_rowid.sql
+ * 2019-01-24: Integration tests.
+ * 2019-01-22: Port to TypeScript + Redux. Unit tests.
+ * 2017-07-01: UI rewrite to React.
+ * 2016-12-30: Upgrading to version 0.2.0 requires a migration, run with:
+   sqlite3 db.sqlite < schema/migrations/004_add_article_rowid.sql
 
 ## Debugging
 

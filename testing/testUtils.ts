@@ -1,5 +1,46 @@
 import { Server } from 'http';
 import { Page } from 'puppeteer';
+import { spawn } from 'child_process';
+
+/**
+ * Runs the server. Pipes its output to the current process.
+ * Throws (uncaught) error when the application finishes with
+ * nonzero status code.
+ */
+export const runServer = (moduleLocation: string, args: string[]) => {
+    const child = spawn('node', [moduleLocation, ...args], {
+        env: { NODE_ENV: 'production' }
+    });
+    child.stdout.pipe(process.stdout, { end: false });
+    child.stderr.pipe(process.stderr, { end: false });
+    child.on('close', (code) => {
+        if (code !== 0) {
+            throw new Error('Child application finished with non-0 exit value.');
+        }
+    });
+    return child;
+};
+
+/**
+ * Runs the app. Pipes its output to the current process.
+ * Resolves the returned promise when the process is finished.
+ */
+export const runApp = (moduleLocation: string, args: string[]) => {
+    return new Promise((resolve, reject) => {
+        const child = spawn('node', [moduleLocation, ...args], {
+            env: { NODE_ENV: 'production' }
+        });
+        child.stdout.pipe(process.stdout, { end: false });
+        child.stderr.pipe(process.stderr, { end: false });
+        child.on('close', (code) => {
+            if (code === 0) {
+                resolve();
+            } else {
+                reject(new Error('Child application finished with non-0 exit value.'));
+            }
+        });
+    });
+};
 
 /**
  * Closes the given HTTP server.

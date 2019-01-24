@@ -1,9 +1,8 @@
 import path from 'path';
 import createFeedServer from './createFeedServer';
 import createSqliteFile from './createSqliteFile';
-import { closeServer } from './testUtils';
+import { closeServer, runApp } from './testUtils';
 import { Server } from 'http';
-import runMain from '../src/lib/runMain';
 
 // Configuration for this test.
 // FEED_SERVER_PORT must be consistent with test data in TEST_DATA.
@@ -13,6 +12,7 @@ const FEED_SERVER_PORT = 5001;
 const TEST_DATA = path.join(__dirname, 'fetcher.data.sql');
 const SQLITE_FILE = path.join(__dirname, 'fetcher.db.sqlite');
 const CONFIG_FILE = path.join(__dirname, 'fetcher.config.json');
+const APP_MODULE = path.join(__dirname, '..', 'dist');
 
 let server: Server;
 
@@ -29,5 +29,5 @@ afterAll(async () => {
 });
 
 it('should fetch the feed and update the database without error', async () => {
-    await runMain(['-f', '-c', CONFIG_FILE]);
+    await runApp(APP_MODULE, ['-f', '-c', CONFIG_FILE]);
 });

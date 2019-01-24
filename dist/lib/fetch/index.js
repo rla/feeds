@@ -11,10 +11,10 @@ const debug = debug_1.default('app:fetch');
 /**
  * Runs feed fetching and parsing as a separate NodeJS process.
  */
-exports.default = async (feeds) => {
+exports.default = async (feeds, configFile) => {
     return new Promise((resolve, reject) => {
         const script = path_1.default.join(__dirname, 'app.js');
-        const app = child_process_1.spawn('node', [script]);
+        const app = child_process_1.spawn('node', [script, configFile]);
         const results = [];
         const errors = [];
         app.stdout.pipe(split_1.default()).on('data', (line) => {

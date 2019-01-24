@@ -7,12 +7,12 @@ const runUpdate_1 = __importDefault(require("./runUpdate"));
 /**
  * Starts to pull newsfeeds periodically.
  */
-exports.default = async (config, database) => {
+exports.default = async (config, database, configFile) => {
     if (config.polltime < 60) {
         throw new Error('Poll time must be at least 60 seconds.');
     }
     return setInterval(async () => {
-        await runUpdate_1.default(database);
+        await runUpdate_1.default(database, configFile);
     }, config.polltime * 1000);
 };
 //# sourceMappingURL=periodicFetch.js.map

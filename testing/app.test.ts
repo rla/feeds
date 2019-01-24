@@ -1,35 +1,33 @@
 import path from 'path';
+import { ChildProcess } from 'child_process';
 import puppeteer, { Browser, Page } from 'puppeteer';
-import runMain, { System } from '../src/lib/runMain';
 import createSqliteFile from './createSqliteFile';
-import { closeServer, errorWatcher } from './testUtils';
+import { errorWatcher, runServer } from './testUtils';
 
 const TEST_DATA = path.join(__dirname, 'app.data.sql');
 const SQLITE_FILE = path.join(__dirname, 'app.db.sqlite');
 const CONFIG_FILE = path.join(__dirname, 'app.config.json');
+const APP_MODULE = path.join(__dirname, '..', 'dist');
 
-let system: System;
+let app: ChildProcess;
 let browser: Browser;
 
-// Starts the server with the
+// Starts the server. Starts Puppeteer. Waits some time to
+// let server begin serving HTTP request.
 
 beforeAll(async () => {
     await createSqliteFile(SQLITE_FILE, TEST_DATA);
-    system = await runMain(['-c', CONFIG_FILE]);
+    app = runServer(APP_MODULE, ['-c', CONFIG_FILE]);
     browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 });
 
 // Closes the browser instance of Puppeteer.
-// Closes database, shuts down Express server.
-// Clears the periodic fetcher interval.
+// Kills the application.
 
 afterAll(async () => {
     await browser.close();
-    if (system) {
-        clearInterval(system.fetcher);
-        await system.database.close();
-        await closeServer(system.server);
-    }
+    app.kill();
 });
 
 let page: Page;
@@ -47,9 +45,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    if (page) {
-        await page.close();
-    }
+    await page.close();
 });
 
 const BASE_URL = 'http://localhost:3330';
@@ -62,6 +58,24 @@ it('should display unseen articles', async () => {
 
 it('should display important articles', async () => {
     await page.goto(`${BASE_URL}/#important`);
+    await page.waitForSelector('#root .well');
+    expect(errors).toEqual([]);
+});
+
+it('should display search results', async () => {
+    await page.goto(`${BASE_URL}/#results/article`);
+    await page.waitForSelector('#root .well');
+    expect(errors).toEqual([]);
+});
+
+it('should display invalid feeds', async () => {
+    await page.goto(`${BASE_URL}/#invalid`);
+    await page.waitForSelector('#root .well');
+    expect(errors).toEqual([]);
+});
+
+it('should display feeds', async () => {
+    await page.goto(`${BASE_URL}/#feeds`);
     await page.waitForSelector('#root .well');
     expect(errors).toEqual([]);
 });

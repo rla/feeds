@@ -14,10 +14,10 @@ const debug = debugLogger('app:service');
 /**
  * Updates all feeds in the database.
  */
-export default async (database: Database) => {
+export default async (database: Database, configFile: string) => {
     const feeds = await database.transaction((tx) => feedRepo.all(tx));
     debug(`Updating ${feeds.length} feeds.`);
-    const result = await fetch(feeds);
+    const result = await fetch(feeds, configFile);
     await updateDatabase(database, result.feeds);
     await saveErrors(database, result.errors);
 };

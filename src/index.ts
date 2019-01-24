@@ -11,3 +11,9 @@ import runMain from './lib/runMain';
         process.exit(1);
     }
 })();
+
+// Gracefully terminate on sigterm.
+
+process.on('SIGTERM', () => {
+    process.exit(0);
+});

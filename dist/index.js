@@ -15,4 +15,8 @@ const runMain_1 = __importDefault(require("./lib/runMain"));
         process.exit(1);
     }
 })();
+// Gracefully terminate on sigterm.
+process.on('SIGTERM', () => {
+    process.exit(0);
+});
 //# sourceMappingURL=index.js.map

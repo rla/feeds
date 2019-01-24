@@ -87,7 +87,9 @@ const outputError = async (err, feed) => {
 // Fetches all given urls.
 // Does it so by parallel requests.
 const fetchAll = async (feeds) => {
-    const configFile = process.argv[1];
+    // We have config file passed down as argument to the
+    // child process.
+    const configFile = process.argv[2];
     if (!configFile) {
         throw new Error('Config file is not specified.');
     }

@@ -14,11 +14,11 @@ const debug = debugLogger('app:fetch');
 /**
  * Runs feed fetching and parsing as a separate NodeJS process.
  */
-export default async (feeds: FetchFeedIn[]): Promise<FetchResult> => {
+export default async (feeds: FetchFeedIn[], configFile: string): Promise<FetchResult> => {
     return new Promise((resolve, reject) => {
 
         const script = path.join(__dirname, 'app.js');
-        const app = spawn('node', [ script ]);
+        const app = spawn('node', [ script, configFile ]);
         const results: FetchFeedOut[] = [];
         const errors: FetchError[] = [];
 

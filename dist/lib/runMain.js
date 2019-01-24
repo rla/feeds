@@ -22,13 +22,12 @@ exports.default = async (argv) => {
     const database = new db_1.SqliteDatabase(config.db);
     await database.open();
     if (options.fetch) {
-        await runUpdate_1.default(database);
+        await runUpdate_1.default(database, configFile);
         await database.close();
     }
     else {
-        const fetcher = await periodicFetch_1.default(config, database);
-        const server = await runServer_1.default(config, database);
-        return { database, fetcher, server };
+        await periodicFetch_1.default(config, database, configFile);
+        await runServer_1.default(config, database);
     }
 };
 //# sourceMappingURL=runMain.js.map
