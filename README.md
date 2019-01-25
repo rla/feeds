@@ -207,6 +207,36 @@ a future reference for a similar project):
    for JSX.
  * `webpack.config.js` - Webpack configuration for the frontend.
 
+### Debugging
+
+Debugging backend:
+
+To start fetching of feeds immediately, start the app with `-f` switch:
+
+```
+node dist -f
+```
+
+The backend uses source maps and `source-map-support` to map error stack
+traces to the TypeScript source code.
+
+To see debug messages from the backend (it uses the `debug` package):
+
+```
+DEBUG=app:*
+```
+
+Debugging frontend:
+
+Both JavaScript and CSS use source maps, making it possible to set breakpoints
+and trace associated code back to its original source.
+
+Frontend JavaScript sets up support for [Redux Devtools][redux-devtools]. For debugging
+React components, [React Developer Tools][react-devtools] is a very useful browser extension.
+
+[redux-devtools]: https://github.com/reduxjs/redux-devtools
+[react-devtools]: https://github.com/facebook/react-devtools
+
 ## Changelog
 
  * 2019-01-24: Integration tests.
@@ -214,14 +244,6 @@ a future reference for a similar project):
  * 2017-07-01: UI rewrite to React.
  * 2016-12-30: Upgrading to version 0.2.0 requires a migration, run with:
    sqlite3 db.sqlite < schema/migrations/004_add_article_rowid.sql
-
-## Debugging
-
-To start fetching of feeds immediately, start the app with `-f` switch:
-
-    node dist -f
-
-TODO: debug package.
 
 ## Misc
 
