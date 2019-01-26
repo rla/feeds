@@ -1,8 +1,9 @@
-# feeds
+# Feeds
 
-My personal web-based replacement for Google Reader and other feed readers. It tracks
-seen/read/important articles and is built for speed. I currently follow
-about 600 feeds and some readers had trouble coping with this amount of feeds.
+My personal web-based replacement for Google Reader (was shutdown) and
+other feed readers. It tracks seen/read/important articles and is built for
+speed. I currently follow about 600 feeds and other readers had trouble
+coping with this amount of feeds.
 
 ## How does it work
 
