@@ -6,7 +6,27 @@ about 600 feeds and some readers had trouble coping with this amount of feeds.
 
 ## How does it work
 
+The feed reader works differently to other similar applications. It only displays
+item titles and assumes that an item title provides enough information to decide
+whether you want or want not to read it. The actual article is displayed in a seperate
+browser tab, in the case you decide to read it.
 
+The main view of the application displays the list of "unseen" articles. These are
+the fresh items from recently updated newsfeeds. Clicking "Seen" on an item will mark
+it, and the previous items, as "seen". This allows to skip a large number of
+uninteresting articles. This is what makes this app to scale to a very high number
+of feeds without having too much cognitive overhead to mark things "read" manually
+or have UI slow down to useless speed because you have too many feeds and articles.
+
+The items appear in the "unseen" list by the order of publication date. The list
+uses infinite scroll.
+
+Read articles are also tracked. An article can be marked as "important" which is
+displayed in the list of "important" articles.
+
+Screenshot:
+
+![Screenshot](etc/feeds.png)
 
 ## How is it built
 
@@ -80,13 +100,7 @@ Frontend:
  * Typesafe REST API with shared types between frontend and backend.
  * Compiled and bundled through Webpack.
    - Separated external libraries bundle.
- * UI elements use Bootstrap 2 default styles.
-   - It should be upgraded but I have not decided yet what to use.
-   - There is an opportunity to use CSS-in-JS approach. This approach
-     must support style sharing between global (h1, a, etc) elements
-     and between specific classes. I tried to use Typestyle for this
-     but it has no sharing support.
-   - Developing a custom design from scratch is a lot of work.
+ * UI elements use Bootstrap default styles.
 
 Frontend files:
 
