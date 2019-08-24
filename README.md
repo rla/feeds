@@ -46,10 +46,10 @@ My live app is running at [http://feeds.rlaanemets.com/](http://feeds.rlaanemets
 
 ## Installing
 
- 1. First install dependencies using `npm install --production`.
- 2. Then create database using `make db.sqlite`.
- 3. Then copy `config.example.json` to `config.json`.
- 4. Run app with `NODE_ENV=production node dist`.
+1.  First install dependencies using `npm install --production`.
+2.  Then create database using `make db.sqlite`.
+3.  Then copy `config.example.json` to `config.json`.
+4.  Run app with `NODE_ENV=production node dist`.
 
 ## Importing feed addresses
 
@@ -73,39 +73,39 @@ provides a REST API for the frontend.
 
 Backend:
 
- * [Express][express] web framework.
- * SQLite database.
-   - Uses package `node-sqlite` for Promise-based access.
-   - Custom transaction manager in `src/lib/db`.
- * [Fast-feed][fast-feed] RSS/Atom parser.
-   - This package was developed for this application although
-     it has been used by others too.
+- [Express][express] web framework.
+- SQLite database.
+  - Uses package `node-sqlite` for Promise-based access.
+  - Custom transaction manager in `src/lib/db`.
+- [Fast-feed][fast-feed] RSS/Atom parser.
+  - This package was developed for this application although
+    it has been used by others too.
 
 [express]: https://expressjs.com/
 [fast-feed]: https://github.com/rla/fast-feed
 
 Backend files:
 
- * `src` - source tree (TypeScript).
- * `src/index.ts` - application entrypoint.
- * `Makefile` - helper to create an initial database state.
- * `schema/schema.sql` - database schema.
- * `schema/migrations` - migrations applied after the initial schema.
+- `src` - source tree (TypeScript).
+- `src/index.ts` - application entrypoint.
+- `Makefile` - helper to create an initial database state.
+- `schema/schema.sql` - database schema.
+- `schema/migrations` - migrations applied after the initial schema.
 
 Frontend:
 
- * React view library.
- * Redux state store.
-   - Uses package `redux-thunk` for async actions.
-   - Typesafe actions, reducers, and state with TypeScript.
- * Typesafe REST API with shared types between frontend and backend.
- * Compiled and bundled through Webpack.
-   - Separated external libraries bundle.
- * UI elements use Bootstrap default styles.
+- React view library.
+- Redux state store.
+  - Uses package `redux-thunk` for async actions.
+  - Typesafe actions, reducers, and state with TypeScript.
+- Typesafe REST API with shared types between frontend and backend.
+- Compiled and bundled through Webpack.
+  - Separated external libraries bundle.
+- UI elements use Bootstrap default styles.
 
 Frontend files:
 
- * `public/js/app` - SPA source (TypeScript).
+- `public/js/app` - SPA source (TypeScript).
 
 ### Code style
 
@@ -165,13 +165,13 @@ npm run backend-test
 
 What is tested?
 
- * Redux reducers. It is checked that the state is correctly
-   transformed according to the dispatched actions.
- * Redux actions including async actions. Api is mocked and
-   actions are checked to create correct actions.
- * Shallow rendering of React components to catch potential crashes.
- * Some backend functionality is unit-tested.
- * More cases can be easily added to the existing tests.
+- Redux reducers. It is checked that the state is correctly
+  transformed according to the dispatched actions.
+- Redux actions including async actions. Api is mocked and
+  actions are checked to create correct actions.
+- Shallow rendering of React components to catch potential crashes.
+- Some backend functionality is unit-tested.
+- More cases can be easily added to the existing tests.
 
 ### Integration/E2E testing
 
@@ -182,8 +182,8 @@ possible interleaving issues from concurrency.
 
 [puppeteer]: https://github.com/GoogleChrome/puppeteer
 
- * Newsfeed update test: `testing/fetcher.test.js`.
- * Full stack integration test: `testing/app.test.js`.
+- Newsfeed update test: `testing/fetcher.test.js`.
+- Full stack integration test: `testing/app.test.js`.
 
 Both tests run fully compiled application. To compile:
 
@@ -210,17 +210,17 @@ node dist -c testing/app.config.json
 The project contains the following toolset configuration files (as
 a future reference for a similar project):
 
- * `package.json` - standard NPM configuration for the project.
- * `jest.backend.config.js` - Jest configuration for the backend tests.
- * `jest.frontend.config.js` - Jest configuration for the frontend tests. Differs
-   by the TypeScript configuration file locations and some plugins.
- * `jest.integration.config.js` - Jest configuration for the integration tests. Differs
-   by the TypeScript configuration file locations.
- * `tslint.json` - TSLint configuration.
- * `src/tsconfig.json` - TypeScript configuration for the backend.
- * `public/js/app/tsconfig.json` - TypeScript configuration for the frontend. Has support
-   for JSX.
- * `webpack.config.js` - Webpack configuration for the frontend.
+- `package.json` - standard NPM configuration for the project.
+- `jest.backend.config.js` - Jest configuration for the backend tests.
+- `jest.frontend.config.js` - Jest configuration for the frontend tests. Differs
+  by the TypeScript configuration file locations and some plugins.
+- `jest.integration.config.js` - Jest configuration for the integration tests. Differs
+  by the TypeScript configuration file locations.
+- `tslint.json` - TSLint configuration.
+- `src/tsconfig.json` - TypeScript configuration for the backend.
+- `public/js/app/tsconfig.json` - TypeScript configuration for the frontend. Has support
+  for JSX.
+- `webpack.config.js` - Webpack configuration for the frontend.
 
 ### Debugging
 
@@ -254,11 +254,12 @@ React components, [React Developer Tools][react-devtools] is a very useful brows
 
 ## Changelog
 
- * 2019-01-24: Integration tests.
- * 2019-01-22: Port to TypeScript + Redux. Unit tests.
- * 2017-07-01: UI rewrite to React.
- * 2016-12-30: Upgrading to version 0.2.0 requires a migration, run with:
-   sqlite3 db.sqlite < schema/migrations/004_add_article_rowid.sql
+- 2019-08-25: Support disabling read access to anonymous users. Code reformatted with Prettier.
+- 2019-01-24: Integration tests.
+- 2019-01-22: Port to TypeScript + Redux. Unit tests.
+- 2017-07-01: UI rewrite to React.
+- 2016-12-30: Upgrading to version 0.2.0 requires a migration, run with:
+  sqlite3 db.sqlite < schema/migrations/004_add_article_rowid.sql
 
 ## Misc
 
