@@ -8,7 +8,7 @@
     "debug": "^4.1.1",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
-    "fast-feed": "^1.5.6",
+    "fast-feed": "^1.7.0",
     "promise-queue": "^2.2.5",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
@@ -18,7 +18,7 @@
     "request": "^2.88.0",
     "source-map-support": "^0.5.10",
     "split": "^1.0.1",
-    "sqlite": "^3.0.0",
+    "sqlite": "^3.0.3",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
@@ -43,6 +43,7 @@
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.7.1",
     "jest": "^23.6.0",
+    "prettier": "^1.18.2",
     "puppeteer": "^1.11.0",
     "redux-mock-store": "^1.5.3",
     "ts-jest": "^23.10.5",
