@@ -31,7 +31,7 @@ exports.default = async (feeds, configFile) => {
             else if (obj.type === 'feed') {
                 const feed = obj.data;
                 debug(`Got feed ${feed.url}`);
-                feed.items.forEach((article) => {
+                feed.items.forEach(article => {
                     article.date = article.date === null ? null : new Date(article.date);
                 });
                 results.push(feed);

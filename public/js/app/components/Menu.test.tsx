@@ -3,9 +3,5 @@ import { shallow } from 'enzyme';
 import Menu from './Menu';
 
 it('renders without crashing', () => {
-    shallow((
-        <Menu
-            authenticated={false}
-            logout={jest.fn()}/>
-    ));
+  shallow(<Menu authenticated={false} logout={jest.fn()} />);
 });

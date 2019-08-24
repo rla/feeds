@@ -5,8 +5,8 @@ import { ThunkDispatch } from '../../actions/thunk';
 import { AnyAction } from 'redux';
 
 type FeedsMockStore = {
-    dispatch: ThunkDispatch,
-    getActions: () => AnyAction[]
+  dispatch: ThunkDispatch;
+  getActions: () => AnyAction[];
 };
 
 /**
@@ -14,7 +14,7 @@ type FeedsMockStore = {
  */
 // tslint:disable-next-line: no-any
 export default (initialState: any): FeedsMockStore => {
-    const middlewares = [thunk.withExtraArgument(mockApi)];
-    const mockStore = configureStore(middlewares);
-    return mockStore(initialState) as FeedsMockStore;
+  const middlewares = [thunk.withExtraArgument(mockApi)];
+  const mockStore = configureStore(middlewares);
+  return mockStore(initialState) as FeedsMockStore;
 };

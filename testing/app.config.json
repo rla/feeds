@@ -1,18 +1,19 @@
 {
-    "db": "testing/app.db.sqlite",
-    "requests": 20,
-    "polltime": 60000,
-    "timeout": 10000,
-    "auth": [
-        {
-            "user": "test",
-            "pass": "test"
-        },
-        {
-            "user": "test1",
-            "pass": "test1"
-        }
-    ],
-    "sessionSecret": "secret",
-    "title": "Feeds"
+  "db": "testing/app.db.sqlite",
+  "requests": 20,
+  "polltime": 60000,
+  "timeout": 10000,
+  "auth": [
+    {
+      "user": "test",
+      "pass": "test"
+    },
+    {
+      "user": "test1",
+      "pass": "test1"
+    }
+  ],
+  "sessionSecret": "secret",
+  "title": "Feeds",
+  "allowAnonymousReadonly": true
 }

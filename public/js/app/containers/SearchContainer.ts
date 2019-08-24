@@ -5,12 +5,12 @@ import Search from '../components/Search';
 import { ThunkDispatch } from '../actions/thunk';
 
 const mapStateToProps = (state: FeedsState) => ({
-    query: state.search.query
+  query: state.search.query,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-    setQuery: (query: string) => dispatch(setQuery(query)),
-    submit: () => dispatch(submit())
+  setQuery: (query: string) => dispatch(setQuery(query)),
+  submit: () => dispatch(submit()),
 });
 
 /**

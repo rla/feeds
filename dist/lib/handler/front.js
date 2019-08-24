@@ -7,9 +7,10 @@ exports.default = (app, config) => {
     app.get('/', (req, res) => {
         res.render('index', {
             loggedIn: req.isAuthenticated(),
+            allowAnonymousReadonly: config.allowAnonymousReadonly,
             version: config.version,
             title: config.title || 'Feeds',
-            production: process.env.NODE_ENV === 'production'
+            production: process.env.NODE_ENV === 'production',
         });
     });
     app.get('/old', (req, res) => {

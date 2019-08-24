@@ -1,21 +1,18 @@
-import {
-    URLS_SET_TEXT,
-    UrlsAction
-} from '../actions/urls';
+import { URLS_SET_TEXT, UrlsAction } from '../actions/urls';
 
 export type UrlsState = {
-    text: string
+  text: string;
 };
 
 const initialState = {
-    text: ''
+  text: '',
 };
 
 export default (state = initialState, action: UrlsAction): UrlsState => {
-    switch (action.type) {
-        case URLS_SET_TEXT:
-            return { ...state, text: action.text };
-        default:
-            return state;
-    }
+  switch (action.type) {
+    case URLS_SET_TEXT:
+      return { ...state, text: action.text };
+    default:
+      return state;
+  }
 };

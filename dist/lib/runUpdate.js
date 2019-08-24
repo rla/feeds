@@ -19,7 +19,7 @@ const debug = debug_1.default('app:service');
  * Updates all feeds in the database.
  */
 exports.default = async (database, configFile) => {
-    const feeds = await database.transaction((tx) => feedRepo.all(tx));
+    const feeds = await database.transaction(tx => feedRepo.all(tx));
     debug(`Updating ${feeds.length} feeds.`);
     const result = await fetch_1.default(feeds, configFile);
     await updateDatabase(database, result.feeds);
@@ -45,7 +45,7 @@ const updateDatabase = async (database, feeds) => {
                     feedUuid: feed.uuid,
                     title: item.title || 'Untitled',
                     link: item.link,
-                    date: item.date ? item.date : new Date()
+                    date: item.date ? item.date : new Date(),
                 };
                 await articleRepo.save(tx, article);
             }

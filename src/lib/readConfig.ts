@@ -1,19 +1,20 @@
 import fs from 'fs';
 
 export type User = {
-    user: string,
-    pass: string
+  user: string;
+  pass: string;
 };
 
 export type Config = {
-    db: string,
-    requests: number,
-    polltime: number,
-    timeout: number,
-    auth: User[],
-    sessionSecret: string,
-    title: string,
-    version: string
+  db: string;
+  requests: number;
+  polltime: number;
+  timeout: number;
+  auth: User[];
+  sessionSecret: string;
+  title: string;
+  version: string;
+  allowAnonymousReadonly: boolean;
 };
 
 /**
@@ -22,7 +23,10 @@ export type Config = {
  * configuration object.
  */
 export const readConfig = async (filename: string, version: string) => {
-    const config = JSON.parse(fs.readFileSync(filename, 'utf8')) as Config;
-    config.version = version;
-    return config as Readonly<Config>;
+  const config = JSON.parse(fs.readFileSync(filename, 'utf8')) as Config;
+  config.version = version;
+  if (config.allowAnonymousReadonly === undefined) {
+    config.allowAnonymousReadonly = false;
+  }
+  return config as Readonly<Config>;
 };

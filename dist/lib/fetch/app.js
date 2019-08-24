@@ -17,7 +17,7 @@ const promisedRequest = util_1.default.promisify(request_1.default);
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 // Wait for incoming request.
-process.stdin.pipe(split_1.default()).on('data', (line) => {
+process.stdin.pipe(split_1.default()).on('data', line => {
     (async () => {
         try {
             const feeds = JSON.parse(line);
@@ -44,7 +44,7 @@ const fetch = async (config, feed) => {
         url: feed.url,
         timeout: config.timeout,
         strictSSL: false,
-        maxRedirects: 5
+        maxRedirects: 5,
     };
     try {
         const response = await promisedRequest(options);
@@ -63,16 +63,16 @@ const outputFeed = async (feed, result) => {
         url: feed.url,
         uuid: feed.uuid,
         id: result.id,
-        items: result.items.map((item) => {
+        items: result.items.map(item => {
             return {
                 id: item.id,
                 title: item.title,
                 link: item.link,
-                date: item.date
+                date: item.date,
             };
         }),
         link: result.link,
-        title: result.title
+        title: result.title,
     };
     return writeOutput(JSON.stringify({ type: 'feed', data: out }) + '\n');
 };
@@ -80,7 +80,7 @@ const outputError = async (err, feed) => {
     const out = {
         url: feed.url,
         uuid: feed.uuid,
-        err: err.message
+        err: err.message,
     };
     return writeOutput(JSON.stringify({ type: 'error', data: out }) + '\n');
 };
@@ -96,6 +96,6 @@ const fetchAll = async (feeds) => {
     const config = await readConfig_1.readConfig(configFile, 'child');
     debug(`Using ${config.requests} concurrent requests`);
     const queue = new promise_queue_1.default(config.requests);
-    return Promise.all(feeds.map((feed) => queue.add(() => fetch(config, feed))));
+    return Promise.all(feeds.map(feed => queue.add(() => fetch(config, feed))));
 };
 //# sourceMappingURL=app.js.map

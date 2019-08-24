@@ -73,13 +73,14 @@ exports.search = async (tx, words, rowid, count) => {
     }
     else {
         // tslint:disable-next-line:no-any
-        const params = words.map((word) => `%${word}%`);
+        const params = words.map(word => `%${word}%`);
         params.unshift(rowid);
         params.push(count);
         const conditions = words.map(() => 'title LIKE ?');
         // TODO: string interpolation.
         const sql = 'SELECT * FROM article_with_feed' +
-            ' WHERE article_rowid < ? AND ' + conditions.join(' AND ') +
+            ' WHERE article_rowid < ? AND ' +
+            conditions.join(' AND ') +
             ' ORDER BY article_rowid DESC LIMIT ?';
         params.unshift(sql);
         return tx.all.apply(tx, params);

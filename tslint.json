@@ -1,9 +1,14 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "extends": [
+    "tslint-plugin-prettier",
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
   "jsRules": {},
   "rules": {
-    "quotemark": [true, "single"],
+    "quotemark": [true, "single", "jsx-double"],
     "trailing-comma": [true, "never"],
     "no-console": false,
     "ordered-imports": false,

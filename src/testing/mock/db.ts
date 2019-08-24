@@ -1,7 +1,7 @@
 // tslint:disable: no-empty
 const noopTransaction = <T>(all: T[], fn: () => void) => ({
-    all: async () => all,
-    run: async () => fn()
+  all: async () => all,
+  run: async () => fn(),
 });
 
 /**

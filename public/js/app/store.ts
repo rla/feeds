@@ -13,15 +13,15 @@ import { SearchState } from './reducers/search';
 import { UrlsState } from './reducers/urls';
 
 export type FeedsState = {
-    invalid: InvalidFeedsState,
-    route: RouteState,
-    spinner: SpinnerState,
-    auth: AuthState,
-    login: LoginState,
-    feeds: FeedsFeedsState,
-    articles: ArticlesState,
-    search: SearchState,
-    urls: UrlsState
+  invalid: InvalidFeedsState;
+  route: RouteState;
+  spinner: SpinnerState;
+  auth: AuthState;
+  login: LoginState;
+  feeds: FeedsFeedsState;
+  articles: ArticlesState;
+  search: SearchState;
+  urls: UrlsState;
 };
 
 // tslint:disable-next-line:no-any
@@ -32,4 +32,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
  * The API interface is passed as a separate
  * argument for thunk-based actions.
  */
-export default createStore(reducers, composeEnhancers(applyMiddleware(thunk.withExtraArgument(api))));
+export default createStore(
+  reducers,
+  composeEnhancers(applyMiddleware(thunk.withExtraArgument(api)))
+);

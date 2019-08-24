@@ -1,27 +1,20 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "target": "ES2017",
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "skipLibCheck": true,
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "outDir": "../dist",
-        "baseUrl": ".",
-        "jsx": "react",
-        "paths": {
-            "*": [
-                "../../../node_modules/*"
-            ]
-        },
-        "lib": [
-            "esnext",
-            "dom"
-        ]
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "ES2017",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "../dist",
+    "baseUrl": ".",
+    "jsx": "react",
+    "paths": {
+      "*": ["../../../node_modules/*"]
     },
-    "include": [
-        "**/*"
-    ]
+    "lib": ["esnext", "dom"]
+  },
+  "include": ["**/*"]
 }

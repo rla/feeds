@@ -5,13 +5,13 @@ import { FeedsState } from '../store';
 import { ThunkDispatch } from '../actions/thunk';
 
 const mapStateToProps = (state: FeedsState) => ({
-    authenticated: state.auth.authenticated,
-    items: state.invalid.items
+  authenticated: state.auth.authenticated,
+  items: state.invalid.items,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-    deleteFeed: (feedId: string) => dispatch(deleteFeed(feedId)),
-    resolveFeed: (feedId: string) => dispatch(resolveFeed(feedId))
+  deleteFeed: (feedId: string) => dispatch(deleteFeed(feedId)),
+  resolveFeed: (feedId: string) => dispatch(resolveFeed(feedId)),
 });
 
 /**

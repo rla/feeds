@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const buster_1 = __importDefault(require("./buster"));
 it('should rewrite the request url', () => {
     const req = {
-        url: '/v-1.2.3/public/app.js'
+        url: '/v-1.2.3/public/app.js',
     };
     const next = jest.fn();
     buster_1.default()(req, {}, next);
@@ -15,7 +15,7 @@ it('should rewrite the request url', () => {
 });
 it('should not rewrite the request url', () => {
     const req = {
-        url: '/public/app.js'
+        url: '/public/app.js',
     };
     const next = jest.fn();
     buster_1.default()(req, {}, next);

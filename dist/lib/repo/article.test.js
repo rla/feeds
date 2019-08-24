@@ -54,7 +54,7 @@ it('should execute the save query', async () => {
         feedUuid: 'e4161d28-1e43-11e9-ab14-d663bd873d93',
         id: 'test',
         link: 'http://example.com',
-        title: 'Test Article'
+        title: 'Test Article',
     };
     await article_1.save(db_1.default([], fn), article);
     expect(fn).toBeCalled();

@@ -6,13 +6,14 @@ import App from '../components/App';
 import { ThunkDispatch } from '../actions/thunk';
 
 const mapStateToProps = (state: FeedsState) => ({
-    display: viewToDisplay(state.route.view),
-    spinner: state.spinner.show,
-    authenticated: state.auth.authenticated
+  display: viewToDisplay(state.route.view),
+  spinner: state.spinner.show,
+  authenticated: state.auth.authenticated,
+  allowAnonymousReadonly: state.auth.allowAnonymousReadonly,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-    logout: () => dispatch(logout())
+  logout: () => dispatch(logout()),
 });
 
 /**

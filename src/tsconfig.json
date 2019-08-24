@@ -1,26 +1,19 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "target": "ES2017",
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "skipLibCheck": true,
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "outDir": "../dist",
-        "baseUrl": ".",
-        "paths": {
-            "*": [
-                "../node_modules/*",
-                "types/*"
-            ]
-        },
-        "lib": [
-            "esnext"
-        ]
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "ES2017",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "../dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["../node_modules/*", "types/*"]
     },
-    "include": [
-        "**/*"
-    ]
+    "lib": ["esnext"]
+  },
+  "include": ["**/*"]
 }

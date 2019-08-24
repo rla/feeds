@@ -20,14 +20,14 @@ let server: Server;
 // Creates database instance with the test data.
 
 beforeAll(async () => {
-    server = await createFeedServer(FEED_SERVER_PORT);
-    await createSqliteFile(SQLITE_FILE, TEST_DATA);
+  server = await createFeedServer(FEED_SERVER_PORT);
+  await createSqliteFile(SQLITE_FILE, TEST_DATA);
 });
 
 afterAll(async () => {
-    await closeServer(server);
+  await closeServer(server);
 });
 
 it('should fetch the feed and update the database without error', async () => {
-    await runApp(APP_MODULE, ['-f', '-c', CONFIG_FILE]);
+  await runApp(APP_MODULE, ['-f', '-c', CONFIG_FILE]);
 });

@@ -8,6 +8,6 @@ import { Config } from '../readConfig';
  * Sets up all application routes.
  */
 export default (app: Application, config: Config, database: Database) => {
-    api(app, config, database);
-    front(app, config);
+  api(app, config, database);
+  front(app, config);
 };

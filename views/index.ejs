@@ -1,51 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title><%= title %></title>
-        <meta charset="utf-8">
-        <script>
-            var asyncFunctions = (function() {
-                try { new Function('async () => {}')(); } catch (err) { return false; }
-                return true;
-            })();
-            if (!asyncFunctions) { window.location.href = '/old'; }
-        </script>
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-        <style>
-            body {
-                padding: 1em;
-            }
-            .bold {
-                font-weight: bold;
-            }
-            .spin {
-                position: fixed;
-                top: 50px;
-                left: 1em;
-                width: 220px;
-                height: 19px;
-                background-image: url('/img/spin.gif');
-            }
-            .buttons {
-                margin-top: 0.5em;
-            }
-            .btn + .btn,
-            input + input,
-            input + button {
-                margin-left: 5px;
-            }
-        </style>
-        <script>window.loggedIn = '<%= loggedIn %>' === 'true';</script>
-    </head>
-    <body>
-        <div id="root"></div>
-        <% if (production) { %>
-            <script src="/v-<%= version %>/js/vendors.production.bundle.js"></script>
-            <script src="/v-<%= version %>/js/main.production.bundle.js"></script>
-        <% } else { %>
-            <script src="/v-<%= version %>/js/vendors.development.bundle.js"></script>
-            <script src="/v-<%= version %>/js/main.development.bundle.js"></script>
-        <% } %>
-    </body>
+  <head>
+    <title><%= title %></title>
+    <meta charset="utf-8" />
+    <script>
+      var asyncFunctions = (function() {
+        try {
+          new Function('async () => {}')();
+        } catch (err) {
+          return false;
+        }
+        return true;
+      })();
+      if (!asyncFunctions) {
+        window.location.href = '/old';
+      }
+    </script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
+    />
+    <style>
+      body {
+        padding: 1em;
+      }
+      .bold {
+        font-weight: bold;
+      }
+      .spin {
+        position: fixed;
+        top: 50px;
+        left: 1em;
+        width: 220px;
+        height: 19px;
+        background-image: url('/img/spin.gif');
+      }
+      .buttons {
+        margin-top: 0.5em;
+      }
+      .btn + .btn,
+      input + input,
+      input + button {
+        margin-left: 5px;
+      }
+    </style>
+    <script>
+      window.loggedIn = '<%= loggedIn %>' === 'true';
+    </script>
+    <script>
+      window.allowAnonymousReadonly = '<%= allowAnonymousReadonly %>' === 'true';
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <% if (production) { %>
+    <script src="/v-<%= version %>/js/vendors.production.bundle.js"></script>
+    <script src="/v-<%= version %>/js/main.production.bundle.js"></script>
+    <% } else { %>
+    <script src="/v-<%= version %>/js/vendors.development.bundle.js"></script>
+    <script src="/v-<%= version %>/js/main.development.bundle.js"></script>
+    <% } %>
+  </body>
 </html>

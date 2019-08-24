@@ -12,6 +12,9 @@ const fs_1 = __importDefault(require("fs"));
 exports.readConfig = async (filename, version) => {
     const config = JSON.parse(fs_1.default.readFileSync(filename, 'utf8'));
     config.version = version;
+    if (config.allowAnonymousReadonly === undefined) {
+        config.allowAnonymousReadonly = false;
+    }
     return config;
 };
 //# sourceMappingURL=readConfig.js.map

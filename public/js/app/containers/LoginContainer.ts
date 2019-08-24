@@ -5,14 +5,14 @@ import Login from '../components/Login';
 import { ThunkDispatch } from '../actions/thunk';
 
 const mapStateToProps = (state: FeedsState) => ({
-    user: state.login.user,
-    pass: state.login.pass,
+  user: state.login.user,
+  pass: state.login.pass,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch) => ({
-    setUser: (user: string) => dispatch(setUser(user)),
-    setPass: (pass: string) => dispatch(setPass(pass)),
-    submit: () => dispatch(submit())
+  setUser: (user: string) => dispatch(setUser(user)),
+  setPass: (pass: string) => dispatch(setPass(pass)),
+  submit: () => dispatch(submit()),
 });
 
 /**

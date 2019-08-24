@@ -9,24 +9,30 @@ import * as api from './api';
 import { routeView, routeScroll } from './actions/route';
 import { showSpinner, hideSpinner } from './actions/spinner';
 import { ThunkDispatch } from './actions/thunk';
-import { authSuccessful } from './actions/auth';
+import { authSuccessful, authAllowAnonymousReadonly } from './actions/auth';
 
 type AppWindow = Window & {
-    loggedIn: boolean
+  loggedIn: boolean;
+  allowAnonymousReadonly: boolean;
 };
 
 const dispatchThunk = store.dispatch as ThunkDispatch;
 
 // Set initial authentication status.
 if ((window as AppWindow).loggedIn) {
-    dispatchThunk(authSuccessful());
+  dispatchThunk(authSuccessful());
+}
+
+// Set whether anonymous readonly is allowed.
+if ((window as AppWindow).allowAnonymousReadonly) {
+  dispatchThunk(authAllowAnonymousReadonly());
 }
 
 // Handles infinite scroll.
 scroll.addHandler(() => dispatchThunk(routeScroll()));
 
 // Handles AJAX spinner show/hide.
-api.addHandler((show) => dispatchThunk(show ? showSpinner() : hideSpinner()));
+api.addHandler(show => dispatchThunk(show ? showSpinner() : hideSpinner()));
 
 // Route handlers.
 router.route(/^important/, () => dispatchThunk(routeView('important')));
@@ -38,5 +44,9 @@ router.route(/^feed\/([A-Za-z0-9\-]+)/, (uuid: string) => dispatchThunk(routeVie
 router.route(/^results\/(.+)/, (query: string) => dispatchThunk(routeView('results', [query])));
 router.route(/.*/, () => router.go('unseen'));
 
-ReactDOM.render(<Provider store={store}><AppContainer/></Provider>,
-    document.getElementById('root'));
+ReactDOM.render(
+  <Provider store={store}>
+    <AppContainer />
+  </Provider>,
+  document.getElementById('root')
+);

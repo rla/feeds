@@ -9,6 +9,6 @@ const readFile = util.promisify(fs.readFile);
  * package.json file.
  */
 export default async () => {
-    const json = await readFile(path.join(__dirname, '..', '..', 'package.json'), 'utf8');
-    return JSON.parse(json).version;
+  const json = await readFile(path.join(__dirname, '..', '..', 'package.json'), 'utf8');
+  return JSON.parse(json).version;
 };

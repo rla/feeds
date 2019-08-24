@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // tslint:disable: no-empty
 const noopTransaction = (all, fn) => ({
     all: async () => all,
-    run: async () => fn()
+    run: async () => fn(),
 });
 /**
  * Transaction handler that does nothing.

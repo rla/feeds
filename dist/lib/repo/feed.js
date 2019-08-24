@@ -37,8 +37,7 @@ exports.all = async (tx) => {
  * Reads all feeds with unread, important and unseen counts.
  */
 exports.allStat = async (tx, start, count) => {
-    const sql = 'SELECT * FROM feed_with_stat' +
-        ' ORDER BY unread DESC, title ASC LIMIT ? OFFSET ?';
+    const sql = 'SELECT * FROM feed_with_stat' + ' ORDER BY unread DESC, title ASC LIMIT ? OFFSET ?';
     return tx.all(sql, count, start);
 };
 /**

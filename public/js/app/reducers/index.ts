@@ -10,13 +10,13 @@ import search from './search';
 import urls from './urls';
 
 export default combineReducers({
-    route,
-    invalid,
-    spinner,
-    auth,
-    login,
-    feeds,
-    articles,
-    search,
-    urls
+  route,
+  invalid,
+  spinner,
+  auth,
+  login,
+  feeds,
+  articles,
+  search,
+  urls,
 });

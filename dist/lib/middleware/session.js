@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const BASE_OPTIONS = {
     secure: false,
     httpOnly: true,
-    overwrite: true
+    overwrite: true,
 };
 const options = (customize) => {
     return Object.assign({}, BASE_OPTIONS, customize);
