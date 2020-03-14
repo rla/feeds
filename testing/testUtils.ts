@@ -9,7 +9,7 @@ import { spawn } from 'child_process';
  */
 export const runServer = (moduleLocation: string, args: string[]) => {
   const child = spawn('node', [moduleLocation, ...args], {
-    env: { NODE_ENV: 'production' },
+    env: { ...process.env, NODE_ENV: 'production' },
   });
   child.stdout.pipe(
     process.stdout,
@@ -34,7 +34,7 @@ export const runServer = (moduleLocation: string, args: string[]) => {
 export const runApp = (moduleLocation: string, args: string[]) => {
   return new Promise((resolve, reject) => {
     const child = spawn('node', [moduleLocation, ...args], {
-      env: { NODE_ENV: 'production' },
+      env: { ...process.env, NODE_ENV: 'production' },
     });
     child.stdout.pipe(
       process.stdout,
